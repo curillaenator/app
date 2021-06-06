@@ -35,7 +35,7 @@ const ButtonStyled = styled.button`
   }
 `;
 
-export const Button = ({
+export const ButtonOutline = ({
   width = 128,
   height = 38,
   icon,

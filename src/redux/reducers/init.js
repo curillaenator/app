@@ -58,22 +58,36 @@ export const signIn = () => async (dispatch) => {
   });
 };
 
-export const signCheck = () => (dispatch) => {
-  auth.onAuthStateChanged((user) => {
-    const setState = (user, isAuth, isInit) => {
-      batch(() => {
-        dispatch(setUser(user));
-        dispatch(setAuth(isAuth));
-        dispatch(setInit(isInit));
-      });
-    };
-
-    if (!user) return setState({ userID: null }, false, true);
-
-    db.ref(`users/${user.uid}`).once("value", (userData) => {
-      userData.exists() && setState(userData.val(), true, true);
-      !userData.exists() && setState({ userID: null }, false, true);
+export const signOut = () => (dispatch) => {
+  auth.signOut().then(() => {
+    batch(() => {
+      dispatch(setAuth(false));
+      dispatch(setUser({ userID: null }));
     });
   });
 };
 
+export const signCheck = () => (dispatch) => {
+  const setState = (user, isAuth, isInit) => {
+    batch(() => {
+      dispatch(setUser(user));
+      dispatch(setAuth(isAuth));
+      dispatch(setInit(isInit));
+    });
+  };
+
+  auth.onAuthStateChanged((user) => {
+    // console.log(user);
+
+    if (!user) setState({ userID: null }, false, true);
+
+    if (user) {
+      db.ref(`users/${user.uid}`).on("value", (userData) => {
+        if (userData.exists()) {
+          setState(userData.val(), true, true);
+          db.ref(`users/${user.uid}`).off();
+        }
+      });
+    }
+  });
+};

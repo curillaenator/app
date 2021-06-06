@@ -1,15 +1,18 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-import { Button as ButtonOutline } from "../buttons/ButtonOuline";
+import { User } from "../user/User";
+import { ButtonOutline } from "../buttons/ButtonOutline";
 
 // import { icons } from "../../../utils/icons";
 import { colors } from "../../../utils/colors";
 
 import logo from "../../../assets/images/logo.png";
 
-const LogoStyled = styled.div`
+const LogoStyled = styled(Link)`
   display: flex;
   align-items: center;
+  text-decoration: none;
   transition: 0.08s linear;
   cursor: pointer;
 
@@ -42,21 +45,31 @@ const HeaderStyled = styled.header`
   justify-content: space-between;
   align-items: center;
   height: 120px;
+
+  @media (min-width: 768px) {
+    margin-top: 24px;
+  }
+
+  @media (min-width: 1024px) {
+    margin-top: 44px;
+  }
 `;
 
-export const Header = ({ isAuth, signIn }) => {
+export const Header = ({ user, signIn, isMobile }) => {
   return (
     <HeaderStyled>
-      <LogoStyled>
+      <LogoStyled to="/">
         <img className="image" src={logo} alt="Logo" />
-        <div className="text">A R T</div>
+        {!isMobile && <div className="text">A R T</div>}
       </LogoStyled>
 
-      {!isAuth && (
+      {!user.userID && (
         <div className="buttons">
           <ButtonOutline title="Вход" handler={signIn} />
         </div>
       )}
+
+      {user.userID && <User user={user} isMobile={isMobile} />}
     </HeaderStyled>
   );
 };
