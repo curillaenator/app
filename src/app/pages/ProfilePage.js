@@ -12,20 +12,22 @@ import { colors } from "../../utils/colors";
 
 const ProfileStyled = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   width: 100%;
-  margin: 64px auto;
+  margin: 32px auto;
   padding: 56px 0;
+  border-radius: 24px;
   border: 2px solid ${colors.primary};
-  border-right: 0;
-  border-left: 0;
+  background-color: ${colors.bgWhite};
 
   .avatar {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 30%;
+    width: 100%;
     min-width: 256px;
+    margin-bottom: 32px;
     padding: 0 32px;
     flex-shrink: 0;
 
@@ -38,25 +40,64 @@ const ProfileStyled = styled.div`
   }
 
   .meta {
-    width: calc(70% - 32px);
+    width: 100%;
 
     &_name {
       display: flex;
+      justify-content: center;
       align-items: center;
       height: 64px;
+      margin-bottom: 24px;
       font-size: 24px;
       font-weight: 700;
     }
 
     &_buttons {
       display: flex;
+      flex-direction: column;
       align-items: center;
 
       &_btn {
-        margin-right: 16px;
+        margin-bottom: 16px;
 
         &:last-child {
-          margin-right: 0;
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    margin: 64px auto;
+    border-radius: 0;
+    border-right: 0;
+    border-left: 0;
+    background-color: transparent;
+
+    .avatar {
+      width: 30%;
+      margin-bottom: 0;
+    }
+
+    .meta {
+      width: calc(70% - 32px);
+
+      &_name {
+        justify-content: flex-start;
+        margin-bottom: 0;
+      }
+
+      &_buttons {
+        flex-direction: row;
+
+        &_btn {
+          margin-right: 16px;
+          margin-bottom: 0;
+
+          &:last-child {
+            margin-right: 0;
+          }
         }
       }
     }
