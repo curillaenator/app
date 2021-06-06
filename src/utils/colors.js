@@ -3,6 +3,7 @@ export const colors = {
   shadow: "#36363631",
   bgLightGray: "#f3f3f3",
   bgWhite: "#ffffff",
+  fontTitle: "#8aa376",
   fontBlack: "#363636",
   fontWhite: "#ffffff",
   fontActive: "#363636", // todo

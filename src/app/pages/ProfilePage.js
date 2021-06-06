@@ -6,9 +6,11 @@ import styled from "styled-components";
 import { signOut } from "../../redux/reducers/init";
 import { getProfile } from "../../redux/reducers/main";
 
+import { Welcome } from "../components/welcome/Welcome";
 import { ButtonOutline } from "../components/buttons/ButtonOutline";
 
 import { colors } from "../../utils/colors";
+import { words } from "../../utils/worder";
 
 const ProfileStyled = styled.div`
   display: flex;
@@ -104,6 +106,8 @@ const ProfileStyled = styled.div`
   }
 `;
 
+const PageStyled = styled.div``;
+
 const Profile = ({ user, profile, getProfile, signOut }) => {
   const { id } = useParams();
 
@@ -116,25 +120,29 @@ const Profile = ({ user, profile, getProfile, signOut }) => {
   if (!data) return <div>Загрузка</div>;
 
   return (
-    <ProfileStyled>
-      <div className="avatar">
-        <img className="avatar_img" src={data.avatar} alt={data.username} />
-      </div>
-      <div className="meta">
-        <div className="meta_name">{data.username}</div>
+    <PageStyled>
+      <Welcome title={words.profileTitle} />
 
-        {data.userID === user.userID && (
-          <div className="meta_buttons">
-            <div className="meta_buttons_btn">
-              <ButtonOutline title="Редактировать" />
+      <ProfileStyled>
+        <div className="avatar">
+          <img className="avatar_img" src={data.avatar} alt={data.username} />
+        </div>
+        <div className="meta">
+          <div className="meta_name">{data.username}</div>
+
+          {data.userID === user.userID && (
+            <div className="meta_buttons">
+              <div className="meta_buttons_btn">
+                <ButtonOutline title="Редактировать" />
+              </div>
+              <div className="meta_buttons_btn">
+                <ButtonOutline title="Выйти" handler={signOut} />
+              </div>
             </div>
-            <div className="meta_buttons_btn">
-              <ButtonOutline title="Выйти" handler={signOut} />
-            </div>
-          </div>
-        )}
-      </div>
-    </ProfileStyled>
+          )}
+        </div>
+      </ProfileStyled>
+    </PageStyled>
   );
 };
 

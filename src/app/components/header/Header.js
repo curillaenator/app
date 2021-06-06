@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { User } from "../user/User";
 import { ButtonOutline } from "../buttons/ButtonOutline";
 
-// import { icons } from "../../../utils/icons";
+import { words } from "../../../utils/worder";
 import { colors } from "../../../utils/colors";
 
 import logo from "../../../assets/images/logo.png";
@@ -60,7 +60,7 @@ export const Header = ({ user, signIn, isMobile }) => {
     <HeaderStyled>
       <LogoStyled to="/">
         <img className="image" src={logo} alt="Logo" />
-        {!isMobile && <div className="text">A R T</div>}
+        <div className="text">{words.logoTitle}</div>
       </LogoStyled>
 
       {!user.userID && (

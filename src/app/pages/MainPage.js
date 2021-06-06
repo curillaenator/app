@@ -2,16 +2,31 @@ import { useEffect } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 
-import { setProfile } from "../../redux/reducers/main";
+import { setProfile, getUserList } from "../../redux/reducers/main";
+
+import { Welcome } from "../components/welcome/Welcome";
+import { UserList } from "../components/userlist/UserList";
+
+// import { colors } from "../../utils/colors";
+import { words } from "../../utils/worder";
 
 const MainPageStyled = styled.div``;
 
-const Main = ({ setProfile }) => {
+const Main = ({ userList, setProfile, getUserList }) => {
+  useEffect(() => getUserList(), [getUserList]);
   useEffect(() => setProfile(null), [setProfile]);
 
-  return <MainPageStyled></MainPageStyled>;
+  return (
+    <MainPageStyled>
+      <Welcome title={words.mainTitle} />
+
+      <UserList userList={userList} />
+    </MainPageStyled>
+  );
 };
 
-const mstp = (state) => ({});
+const mstp = (state) => ({
+  userList: state.main.userList,
+});
 
-export const MainPage = connect(mstp, { setProfile })(Main);
+export const MainPage = connect(mstp, { setProfile, getUserList })(Main);

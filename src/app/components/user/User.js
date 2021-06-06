@@ -7,13 +7,13 @@ const UserStyled = styled(Link)`
   display: flex;
   align-items: center;
   text-decoration: none;
-  color: ${colors.fontBlack};
+  color: ${colors.primary};
   transition: 0.08s linear;
   cursor: pointer;
 
   & > p {
     font-size: 18px;
-    font-weight: 600;
+    font-weight: 800;
     margin-right: 8px;
   }
 
@@ -21,6 +21,7 @@ const UserStyled = styled(Link)`
     width: 56px;
     height: 56px;
     border-radius: 50%;
+    border: 6px solid ${colors.fontTitle};
     object-fit: cover;
   }
 

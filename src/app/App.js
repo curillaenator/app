@@ -13,7 +13,7 @@ import { Header } from "./components/header/Header";
 import { colors } from "../utils/colors";
 
 const Container = styled.div`
-  min-width: 320px;
+  min-width: 375px;
   max-width: 1440px;
   margin: 0 auto;
   padding: 0 24px;
