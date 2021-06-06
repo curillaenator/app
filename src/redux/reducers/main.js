@@ -44,7 +44,6 @@ export const getProfile = (id) => (dispatch) => {
 export const getUserList = () => (dispatch) => {
   db.ref("users").once("value", (users) => {
     const usersData = users.exists() ? Object.values(users.val()) : [];
-    console.log(usersData);
     dispatch(setUserList(usersData));
   });
 };

@@ -121,7 +121,7 @@ const Profile = ({ user, profile, getProfile, signOut }) => {
 
   return (
     <PageStyled>
-      <Welcome title={words.profileTitle} />
+      {data.userID === user.userID && <Welcome title={words.profileTitle} />}
 
       <ProfileStyled>
         <div className="avatar">

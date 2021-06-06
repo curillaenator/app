@@ -20,7 +20,7 @@ const Main = ({ userList, setProfile, getUserList }) => {
     <MainPageStyled>
       <Welcome title={words.mainTitle} />
 
-      <UserList userList={userList} />
+      {userList && <UserList userList={userList} />}
     </MainPageStyled>
   );
 };
