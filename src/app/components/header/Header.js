@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 import { User } from "../user/User";
-import { ButtonOutline } from "../buttons/ButtonOutline";
+import { ButtonGhost } from "../buttons/ButtonGhost";
 
 import { words } from "../../../utils/worder";
 import { colors } from "../../../utils/colors";
@@ -65,7 +65,7 @@ export const Header = ({ user, signIn, isMobile }) => {
 
       {!user.userID && (
         <div className="buttons">
-          <ButtonOutline title="Вход" handler={signIn} />
+          <ButtonGhost title="Вход" handler={signIn} />
         </div>
       )}
 

@@ -18,11 +18,12 @@
 
 body {
   line-height: 1.2;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 400;
   background-color: #f3f3f3;
 }
 
 .temptemp {
-  background-color: #8aa376;
+  background-color: #3d4753;
+  text-align: start;
 }

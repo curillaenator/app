@@ -8,7 +8,7 @@ export const words = {
   ),
   mainTitle: (
     <span>
-      <span style={{ color: colors.primary }}> Найди лучших </span> <br />
+      <span style={{ color: colors.primary }}> Найдите лучших </span> <br />
       IT специалистов
     </span>
   ),

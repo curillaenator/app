@@ -7,7 +7,7 @@ const ButtonStyled = styled.button`
   justify-content: center;
   align-items: center;
   width: fit-content;
-  height: 38px;
+  height: ${({ height }) => height}px;
   padding: 16px;
   border-radius: 16px;
   border: 2px solid ${({ fontColor }) => fontColor};
@@ -35,7 +35,9 @@ const ButtonStyled = styled.button`
   }
 `;
 
-export const ButtonOutline = ({
+export const ButtonGhost = ({
+  width = 128,
+  height = 38,
   icon,
   title,
   active = false,
@@ -52,6 +54,8 @@ export const ButtonOutline = ({
 
   return (
     <ButtonStyled
+      width={width}
+      height={height}
       fontColor={fontColor()}
       title={title}
       disabled={disabled}
