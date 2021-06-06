@@ -7,6 +7,6 @@ const Main = () => {
   return <MainPageStyled></MainPageStyled>;
 };
 
-const mstp = (state) => {};
+const mstp = (state) => ({});
 
 export const MainPage = connect(mstp, {})(Main);

@@ -1,8 +1,11 @@
+import { useEffect } from "react";
+import { connect } from "react-redux";
 import { Switch, Route } from "react-router-dom";
 import styled from "styled-components";
 
-import { MainPage } from "./pages/MainPage";
+import { signCheck, signIn } from "../redux/reducers/init";
 
+import { MainPage } from "./pages/MainPage";
 import { Header } from "./components/header/Header";
 
 import { colors } from "../utils/colors";
@@ -21,10 +24,14 @@ const Container = styled.div`
     padding: 0 56px;
 `;
 
-export const App = () => {
+const ArtApp = ({ isInit, isAuth, signCheck, signIn }) => {
+  useEffect(() => signCheck(), [signCheck]);
+
+  if (!isInit) return <div>Загрузка</div>;
+
   return (
     <Container>
-      <Header />
+      <Header isAuth={isAuth} signIn={signIn} />
 
       <Switch>
         <Route exact path="/" render={() => <MainPage />} />
@@ -33,4 +40,9 @@ export const App = () => {
   );
 };
 
-export default App;
+const mstp = (state) => ({
+  isInit: state.init.isInit,
+  isAuth: state.init.isAuth,
+});
+
+export const App = connect(mstp, { signCheck, signIn })(ArtApp);

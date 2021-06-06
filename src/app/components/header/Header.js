@@ -44,7 +44,7 @@ const HeaderStyled = styled.header`
   height: 120px;
 `;
 
-export const Header = ({ isAuth = false }) => {
+export const Header = ({ isAuth, signIn }) => {
   return (
     <HeaderStyled>
       <LogoStyled>
@@ -54,7 +54,7 @@ export const Header = ({ isAuth = false }) => {
 
       {!isAuth && (
         <div className="buttons">
-          <ButtonOutline title="Вход" />
+          <ButtonOutline title="Вход" handler={signIn} />
         </div>
       )}
     </HeaderStyled>
