@@ -1,5 +1,8 @@
+import { batch } from "react-redux";
 import { db } from "../../utils/firebase";
 import { imgUploader, getAvatar } from "../../utils/helpers";
+
+import { setUser } from "./init";
 
 const SET_ISMOBILE = "main/SET_ISMOBILE";
 const SET_PROFILE = "main/SET_PROFILE";
@@ -49,7 +52,7 @@ const setProfileList = (payload) => ({ type: SET_PROFLIST, payload });
 // THUNKS
 
 export const getProfile = (id) => (dispatch) => {
-  db.ref(`users/${id}`).once("value", (profile) => {
+  db.ref(`profiles/${id}`).once("value", (profile) => {
     dispatch(setProfile(profile.val()));
   });
 };
@@ -87,7 +90,19 @@ export const createNewProfile = (data, upl) => async (dispatch, getState) => {
 
   const onUpdate = (err) => {
     if (err) return console.log(err);
-    dispatch(getProfileList());
+
+    db.ref(`users/${userID}`)
+      .update({ profileID: key })
+      .then((res) => {
+        console.log(res);
+
+        batch(() => {
+          dispatch(setProfileForm(false));
+          dispatch(setUser({ ...getState().init.user, profileID: key }));
+          dispatch(getProfileList());
+        });
+      })
+      .catch((err) => console.log(err));
   };
 
   db.ref(`profiles/${key}`).update(newProfile, onUpdate);

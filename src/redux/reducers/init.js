@@ -31,7 +31,7 @@ export const init = (state = initialState, action) => {
 
 const setInit = (payload) => ({ type: SET_IS_INIT, payload });
 const setAuth = (payload) => ({ type: SET_IS_AUTH, payload });
-const setUser = (payload) => ({ type: SET_USER, payload });
+export const setUser = (payload) => ({ type: SET_USER, payload });
 
 // THUNKS
 
