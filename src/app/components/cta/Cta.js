@@ -2,8 +2,6 @@ import styled from "styled-components";
 
 import { Button } from "../buttons/Button";
 
-import { icons } from "../../../utils/icons";
-
 const CtaStyled = styled.div`
   display: flex;
   justify-content: center;
@@ -20,18 +18,21 @@ const CtaStyled = styled.div`
   }
 `;
 
-export const Cta = ({ isSearchForm, setSearchForm }) => {
+export const Cta = ({
+  isForm = false,
+  buttonTtl = { idle: "idle", active: "active" },
+  buttonIcon,
+  setForm = () => console.log("cta handler"),
+}) => {
   return (
-    <CtaStyled ison={isSearchForm}>
+    <CtaStyled ison={isForm}>
       <Button
-        icon={icons.search}
-        title={isSearchForm ? "Скрыть поиск" : "Искать специалиста"}
+        icon={buttonIcon}
+        title={isForm ? buttonTtl.active : buttonTtl.idle}
         width={256}
-        active={isSearchForm}
-        handler={() => setSearchForm(!isSearchForm)}
+        active={isForm}
+        handler={() => setForm(!isForm)}
       />
-
-      <div className="search"></div>
     </CtaStyled>
   );
 };

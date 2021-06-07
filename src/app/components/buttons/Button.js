@@ -69,12 +69,13 @@ const ButtonStyled = styled.button`
     & > svg {
       width: 18px;
       height: 18px;
+      fill: ${({ active }) => (active ? colors.primary : colors.fontLightGray)};
     }
   }
 
   .title {
     width: fit-content;
-    color: ${colors.fontLightGray};
+    color: ${({ active }) => (active ? colors.primary : colors.fontLightGray)};
     font-size: 14px;
     font-weight: 700;
     line-height: 24px;

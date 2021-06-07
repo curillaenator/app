@@ -66,20 +66,24 @@ const CardStyled = styled(Link)`
   }
 `;
 
-export const UserCard = ({ user }) => {
+export const UserCard = ({ profile }) => {
   return (
-    <CardStyled to={`/profile/${user.userID}`}>
+    <CardStyled to={`/profile/${profile.profileID}`}>
       <div className="avatar">
-        <img className="avatar_img" src={user.avatar} alt={user.username} />
+        <img
+          className="avatar_img"
+          src={profile.avatarURL}
+          alt={profile.name}
+        />
       </div>
 
       <div className="meta">
         <div className="meta_big">
           {/* <span style={{ color: colors.fontTitle }}></span> */}
-          {user.username}
+          {profile.name}
         </div>
 
-        <div className="meta_small">{user.job ? user.job : "не указал"}</div>
+        <div className="meta_small">{profile.job}</div>
       </div>
     </CardStyled>
   );

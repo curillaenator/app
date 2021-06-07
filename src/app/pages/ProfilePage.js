@@ -4,13 +4,20 @@ import { useParams, Redirect } from "react-router-dom";
 import styled from "styled-components";
 
 import { signOut } from "../../redux/reducers/init";
-import { getProfile } from "../../redux/reducers/main";
+import {
+  getProfile,
+  setProfileForm,
+  createNewProfile,
+} from "../../redux/reducers/main";
 
 import { Welcome } from "../components/welcome/Welcome";
+import { Cta } from "../components/cta/Cta";
+import { FormProfile } from "../components/formprofile/FormProfile";
 import { ButtonOutline } from "../components/buttons/ButtonOutline";
 
 import { colors } from "../../utils/colors";
 import { words } from "../../utils/worder";
+import { icons } from "../../utils/icons";
 
 const ProfileStyled = styled.div`
   display: flex;
@@ -108,20 +115,40 @@ const ProfileStyled = styled.div`
 
 const PageStyled = styled.div``;
 
-const Profile = ({ user, profile, getProfile, signOut }) => {
+const Profile = ({
+  user,
+  profile,
+  isProfileForm,
+  setProfileForm,
+  getProfile,
+  signOut,
+  createNewProfile,
+}) => {
   const { id } = useParams();
+  const data = id ? profile : user;
 
   useEffect(() => id && getProfile(id), [id, getProfile]);
 
-  const data = id ? profile : user;
-
   if (!id && !user.userID) return <Redirect to="/" />;
 
-  if (!data) return <div>Загрузка</div>;
+  if (!data) return <div></div>;
 
   return (
     <PageStyled>
-      {data.userID === user.userID && <Welcome title={words.profileTitle} />}
+      {data.userID === user.userID && (
+        <div className="if_owner">
+          <Welcome title={words.profileTitle} />
+
+          <Cta
+            isForm={isProfileForm}
+            setForm={setProfileForm}
+            buttonTtl={words.profileBtn}
+            buttonIcon={icons.create}
+          />
+
+          {isProfileForm && <FormProfile createNewProfile={createNewProfile} />}
+        </div>
+      )}
 
       <ProfileStyled>
         <div className="avatar">
@@ -149,6 +176,12 @@ const Profile = ({ user, profile, getProfile, signOut }) => {
 const mstp = (state) => ({
   user: state.init.user,
   profile: state.main.profile,
+  isProfileForm: state.main.isProfileForm,
 });
 
-export const ProfilePage = connect(mstp, { getProfile, signOut })(Profile);
+export const ProfilePage = connect(mstp, {
+  getProfile,
+  signOut,
+  setProfileForm,
+  createNewProfile,
+})(Profile);

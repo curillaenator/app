@@ -2,6 +2,7 @@ import { Form, Field } from "react-final-form";
 import styled from "styled-components";
 
 import { colors } from "../../../utils/colors";
+import { words } from "../../../utils/worder";
 
 const FormStyled = styled.form`
   margin-bottom: 56px;
@@ -12,7 +13,8 @@ const FormStyled = styled.form`
   .form_title {
     font-size: 16px;
     font-weight: 700;
-    margin-bottom: 16px;
+    margin-bottom: 32px;
+    color: ${colors.primary};
   }
 
   .form_search {
@@ -26,6 +28,14 @@ const FormStyled = styled.form`
       border-radius: 16px 0 0 16px;
       background-color: ${colors.bgLightGray};
       outline: none;
+
+      &::placeholder {
+        transition: 0.08s linear;
+      }
+
+      &:focus::placeholder {
+        opacity: 0;
+      }
     }
 
     &_btn {
@@ -40,10 +50,11 @@ const FormStyled = styled.form`
       transition: 0.08s linear;
 
       &:hover {
-        opacity: 0.85;
+        background-color: ${colors.primaryHover};
       }
+
       &:active {
-        opacity: 1;
+        background-color: ${colors.primary};
       }
     }
   }
@@ -65,7 +76,11 @@ export const SearchForm = () => {
             <h3 className="form_title">Кого вы ищите?</h3>
 
             <div className="form_search">
-              <Field name="search" component="input" />
+              <Field
+                name="search"
+                component="input"
+                placeholder={words.searchPh}
+              />
 
               <button className="form_search_btn">Найти</button>
             </div>

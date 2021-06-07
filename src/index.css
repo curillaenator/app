@@ -23,6 +23,22 @@ body {
   background-color: #f3f3f3;
 }
 
+input,
+textarea {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+input::placeholder {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+textarea::placeholder {
+  font-weight: 600;
+  font-size: 14px;
+}
+
 .temptemp {
   background-color: #3d4753;
   text-align: start;

@@ -4,7 +4,8 @@ import styled from "styled-components";
 
 import {
   setProfile,
-  getUserList,
+  // getUserList,
+  getProfileList,
   setSearchForm,
 } from "../../redux/reducers/main";
 
@@ -13,41 +14,50 @@ import { Cta } from "../components/cta/Cta";
 import { SearchForm } from "../components/formsearch/FormSearch";
 import { UserList } from "../components/userlist/UserList";
 
-// import { colors } from "../../utils/colors";
+import { icons } from "../../utils/icons";
 import { words } from "../../utils/worder";
 
 const MainPageStyled = styled.div``;
 
 const Main = ({
-  userList,
+  // userList,
+  profileList,
   setProfile,
   isSearchForm,
-  getUserList,
+  // getUserList,
+  getProfileList,
   setSearchForm,
 }) => {
-  useEffect(() => getUserList(), [getUserList]);
+  useEffect(() => getProfileList(), [getProfileList]);
   useEffect(() => setProfile(null), [setProfile]);
 
   return (
     <MainPageStyled>
       <Welcome title={words.mainTitle} />
 
-      <Cta isSearchForm={isSearchForm} setSearchForm={setSearchForm} />
+      <Cta
+        isForm={isSearchForm}
+        setForm={setSearchForm}
+        buttonTtl={words.searchBtn}
+        buttonIcon={icons.search}
+      />
 
       {isSearchForm && <SearchForm />}
 
-      {userList && <UserList userList={userList} />}
+      <UserList profileList={profileList} />
     </MainPageStyled>
   );
 };
 
 const mstp = (state) => ({
-  userList: state.main.userList,
+  // userList: state.main.userList,
+  profileList: state.main.profileList,
   isSearchForm: state.main.isSearchForm,
 });
 
 export const MainPage = connect(mstp, {
   setProfile,
-  getUserList,
+  // getUserList,
+  getProfileList,
   setSearchForm,
 })(Main);

@@ -1,11 +1,11 @@
 export const colors = {
   primary: "#303841",
-  primaryActive: "#b0b9a9",
+  primaryActive: "#d5d5d5",
   primaryHover: "#8aa376",
   shadow: "#36363631",
   bgLightGray: "#f3f3f3",
   bgWhite: "#ffffff",
-  bgShape: "#8aa376",
+  bgShape: "#d5d5d5",
   fontTitle: "#8aa376",
   fontBlack: "#363636",
   fontWhite: "#ffffff",

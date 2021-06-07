@@ -49,6 +49,7 @@ export const signIn = () => async (dispatch) => {
         email: user.email,
         avatar: user.photoURL,
         userID: user.uid,
+        isAdmin: false,
       };
 
       db.ref(`users/${user.uid}`)
@@ -79,7 +80,7 @@ export const signCheck = () => (dispatch) => {
   auth.onAuthStateChanged((user) => {
     // console.log(user);
 
-    if (!user) setState({ userID: null }, false, true);
+    if (!user) setState({ userID: null, isAdmin: false }, false, true);
 
     if (user) {
       db.ref(`users/${user.uid}`).on("value", (userData) => {
