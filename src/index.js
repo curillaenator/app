@@ -5,6 +5,7 @@ import { BrowserRouter } from "react-router-dom";
 import { App } from "./app/App";
 import { store } from "./redux/store";
 
+import "react-datepicker/dist/react-datepicker.css";
 import "./index.css";
 
 ReactDOM.render(

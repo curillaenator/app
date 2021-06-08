@@ -39,13 +39,13 @@ export const words = {
         Ваше <span style={{ color: colors.fontTitle }}>полное имя</span>:
       </span>
     ),
-    namePh: "...к примеру Батырбек?",
+    namePh: "...к примеру, Батырбек?",
     job: (
       <span>
         Вашу <span style={{ color: colors.fontTitle }}>специализацию</span>:
       </span>
     ),
-    jobPh: "...например Frontend разработчик",
+    jobPh: "...Frontend разработчик, Laravel бэкенд",
     skills: (
       <span>
         Ваши <span style={{ color: colors.fontTitle }}>IT скиллс</span>:
@@ -59,8 +59,60 @@ export const words = {
     ),
     stepOne: (
       <span>
-        Шаг <span style={{ color: colors.fontTitle }}>1</span> - кто вы?
+        Шаг <span style={{ color: colors.fontTitle }}>1</span> - Кто вы?
       </span>
     ),
+  },
+  stage2form: {
+    stepTwo: (
+      <span>
+        Шаг <span style={{ color: colors.fontTitle }}>2</span> - Ваш опыт
+        работы?
+      </span>
+    ),
+    workStart: (
+      <span>
+        <span style={{ color: colors.fontTitle }}>Начало</span> работы:
+      </span>
+    ),
+    workEnd: (
+      <span>
+        <span style={{ color: colors.fontTitle }}>Окончание</span> работы:
+      </span>
+    ),
+    company: (
+      <span>
+        <span style={{ color: colors.fontTitle }}>Компания</span>, где вы
+        работали:
+      </span>
+    ),
+    companyPh: "...например, Google",
+    companyActivity: (
+      <span>
+        Основная <span style={{ color: colors.fontTitle }}>деятельность</span>{" "}
+        компании:
+      </span>
+    ),
+    companyActivityPh: "...банковская деятельность, интеренет магазин",
+    companySite: (
+      <span>
+        <span style={{ color: colors.fontTitle }}>Сайт</span> компании:
+      </span>
+    ),
+    companySitePh: "...google.com",
+    position: (
+      <span>
+        Занимаемая вами{" "}
+        <span style={{ color: colors.fontTitle }}>должность</span>:
+      </span>
+    ),
+    positionPh: "...Тимлид группы дизайнеров",
+    duty: (
+      <span>
+        Ваши основные{" "}
+        <span style={{ color: colors.fontTitle }}>обязанности</span>:
+      </span>
+    ),
+    dutyPh: "...опишите подробно чем занимались",
   },
 };

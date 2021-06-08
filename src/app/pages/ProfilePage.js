@@ -9,6 +9,7 @@ import {
   setStage2Form,
   createProfile,
   removeProfile,
+  addJobExperience,
 } from "../../redux/reducers/main";
 
 import { LoaderLocal } from "../components/loader/LoaderLocal";
@@ -17,6 +18,7 @@ import { Welcome } from "../components/welcome/Welcome";
 import { Controls } from "../components/controls/Controls";
 import { Cta } from "../components/cta/Cta";
 import { FormProfileOne } from "../components/formprofile/FormProfileOne";
+import { FormProfileTwo } from "../components/formprofile/FormProfileTwo";
 import { ProfileBlockOne } from "../components/profile/ProfileBlockOne";
 
 import { words } from "../../utils/worder";
@@ -37,6 +39,7 @@ const Profile = ({
   getProfile,
   createProfile,
   removeProfile,
+  addJobExperience,
 }) => {
   const { id } = useParams();
 
@@ -87,7 +90,9 @@ const Profile = ({
             buttonIcon={icons.create}
           />
 
-          {isStage2Form && <FormProfileOne createProfile={createProfile} />}
+          {isStage2Form && (
+            <FormProfileTwo addJobExperience={addJobExperience} />
+          )}
         </div>
       )}
     </PageStyled>
@@ -109,4 +114,5 @@ export const ProfilePage = connect(mstp, {
   setStage2Form,
   createProfile,
   removeProfile,
+  addJobExperience,
 })(Profile);

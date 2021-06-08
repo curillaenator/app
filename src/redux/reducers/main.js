@@ -215,3 +215,41 @@ export const removeProfile = (profileID) => (dispatch, getState) => {
 
   db.ref().child(`profiles/${profileID}`).set(null, onSet);
 };
+
+export const addJobExperience = (data) => async (dispatch, getState) => {
+  // batch(() => {
+  //   dispatch(setProgress(0));
+  // });
+
+  const profileID = getState().init.user.profileID;
+  const jobKey = await db.ref(`profiles/${profileID}/jobExperience`).push().key;
+
+  const onUpdate = async (err) => {
+    if (err) return console.log(err);
+
+    await db.ref(`profiles/${profileID}/stage`).once("value", (stage) => {
+      if (stage.val() === 1) {
+        db.ref(`profiles/${profileID}`)
+          .update({ stage: 2 })
+          .then(() => {
+            batch(() => {
+              dispatch(getProfile(profileID));
+              dispatch(setStage2Form(false));
+            });
+          });
+      }
+
+      if (stage.val() > 1) {
+        batch(() => {
+          dispatch(getProfile(profileID));
+          dispatch(setStage2Form(false));
+        });
+      }
+    });
+  };
+
+  db.ref(`profiles/${profileID}/jobExperience`).update(
+    { [jobKey]: data },
+    onUpdate
+  );
+};

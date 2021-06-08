@@ -26,10 +26,8 @@ const InputStyled = styled.div`
   }
 `;
 
-export const Textarea = ({ input, meta, minRows, ...props }) => {
+export const Textarea = ({ input, meta, minRows = 5, ...props }) => {
   const error = meta.touched && meta.error;
-
-  //     if (classN === "message") return { border: "1px solid #f2002c" };
 
   return (
     <InputStyled>
@@ -41,7 +39,7 @@ export const Textarea = ({ input, meta, minRows, ...props }) => {
         className="textarea"
       />
       {!error && <p className="sub">{props.sub}</p>}
-      {error && <p className="sub_error">{meta.error}</p>}
+      {error && <p className="sub sub_error">{meta.error}</p>}
     </InputStyled>
   );
 };
