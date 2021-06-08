@@ -7,7 +7,8 @@ import { setUser } from "./init";
 const SET_PROGRESS = "main/SET_PROGRESS";
 const SET_ISMOBILE = "main/SET_ISMOBILE";
 const SET_SEARCHFORM = "main/SET_ISSEARCHFORM";
-const SET_PROFFORM = "main/SET_PROFFORM";
+const SET_STAGEONE = "main/SET_STAGEONE";
+const SET_STAGETWO = "main/SET_STAGETWO";
 
 const SET_PROFILE = "main/SET_PROFILE";
 const SET_LOAD_PROFILE = "main/SET_IS_PROFILE";
@@ -18,7 +19,8 @@ const initialState = {
   progress: null,
   isMobile: false,
   isSearchForm: false,
-  isProfileForm: false,
+  isStage1Form: false,
+  isStage2Form: false,
   loadProfile: false,
   profile: null,
   loadProfileList: false,
@@ -36,8 +38,11 @@ export const main = (state = initialState, action) => {
     case SET_SEARCHFORM:
       return { ...state, isSearchForm: action.payload };
 
-    case SET_PROFFORM:
-      return { ...state, isProfileForm: action.payload };
+    case SET_STAGEONE:
+      return { ...state, isStage1Form: action.payload };
+
+    case SET_STAGETWO:
+      return { ...state, isStage2Form: action.payload };
 
     //
 
@@ -63,7 +68,8 @@ export const main = (state = initialState, action) => {
 export const setProgress = (payload) => ({ type: SET_PROGRESS, payload });
 export const setMobile = (payload) => ({ type: SET_ISMOBILE, payload });
 export const setSearchForm = (payload) => ({ type: SET_SEARCHFORM, payload });
-export const setProfileForm = (payload) => ({ type: SET_PROFFORM, payload });
+export const setStage1Form = (payload) => ({ type: SET_STAGEONE, payload });
+export const setStage2Form = (payload) => ({ type: SET_STAGETWO, payload });
 
 const setLoadProfile = (payload) => ({ type: SET_LOAD_PROFILE, payload });
 export const setProfile = (payload) => ({ type: SET_PROFILE, payload });
@@ -160,7 +166,7 @@ export const createProfile = (data, upl) => async (dispatch, getState) => {
       .update({ profileID })
       .then(() => {
         batch(() => {
-          dispatch(setProfileForm(false));
+          dispatch(setStage1Form(false));
           dispatch(setUser({ ...getState().init.user, profileID }));
           dispatch(getProfile(profileID));
           dispatch(getProfileList());

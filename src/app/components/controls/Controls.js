@@ -11,7 +11,11 @@ const ControlsStyled = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 32px 0;
+  margin: 8px 0 32px;
+
+  @media (min-width: 768px) {
+    margin: 32px 0;
+  }
 `;
 
 export const Controls = ({ isMobile, isOwner, removeProfile }) => {

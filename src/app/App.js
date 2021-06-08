@@ -15,7 +15,7 @@ import { Header } from "./components/header/Header";
 import { colors } from "../utils/colors";
 
 const Container = styled.div`
-  position: relative:
+  position: relative;
   min-width: 375px;
   max-width: 1440px;
   margin: 0 auto;
@@ -23,7 +23,7 @@ const Container = styled.div`
   color: ${colors.fontBlack};
 
   .progress {
-    position: absolute;
+    position: fixed;
     top:0;
     left: 0;
     width: 100vw;
@@ -61,7 +61,7 @@ const ArtApp = ({
   useEffect(() => signCheck(), [signCheck]);
 
   useEffect(() => {
-    progress === 100 && setTimeout(() => setProgress(null), 1000);
+    progress === 100 && setTimeout(() => setProgress(null), 1200);
   }, [progress, setProgress]);
 
   if (!isInit) return <LoaderFS />;

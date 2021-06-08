@@ -39,6 +39,10 @@ textarea::placeholder {
   font-size: 14px;
 }
 
+button {
+  outline: none;
+}
+
 .temptemp {
   background-color: #3d4753;
   text-align: start;

@@ -28,6 +28,10 @@ export const words = {
     idle: "Создать профиль",
     active: "Передумал",
   },
+  stage2btn: {
+    idle: "Добавить опыт работы",
+    active: "Передумал",
+  },
   searchPh: 'напишите ключевое слово (например "фронтенд")',
   profForm: {
     name: (
@@ -55,7 +59,7 @@ export const words = {
     ),
     stepOne: (
       <span>
-        Шаг <span style={{ color: colors.fontTitle }}>1</span> - добавьте
+        Шаг <span style={{ color: colors.fontTitle }}>1</span> - кто вы?
       </span>
     ),
   },

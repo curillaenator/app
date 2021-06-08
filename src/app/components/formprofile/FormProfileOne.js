@@ -5,7 +5,7 @@ import styled from "styled-components";
 
 import { Dropzone } from "../dropzone/Dropzone";
 import { Textarea } from "../inputs/Textarea";
-import { Button } from "../buttons//Button";
+import { Button } from "../buttons/Button";
 
 import { colors } from "../../../utils/colors";
 import { words } from "../../../utils/worder";
@@ -104,7 +104,7 @@ const FormStyled = styled.form`
   }
 `;
 
-export const FormProfile = ({ createProfile }) => {
+export const FormProfileOne = ({ createProfile }) => {
   const [uploads, setUploads] = useState([]);
 
   const onSubmit = (formData) => createProfile(formData, uploads);
