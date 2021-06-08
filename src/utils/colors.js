@@ -10,7 +10,7 @@ export const colors = {
   fontBlack: "#363636",
   fontWhite: "#ffffff",
   fontLightGray: "#f3f3f3",
-  fontActive: "#363636", // todo
+  fontActive: "#d5d5d5",
   fontDisabled: "#b8b8b8",
   fontDanger: "#ff2b2b",
 };

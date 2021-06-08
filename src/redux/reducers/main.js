@@ -4,36 +4,54 @@ import { imgUploader, getAvatar } from "../../utils/helpers";
 
 import { setUser } from "./init";
 
+const SET_PROGRESS = "main/SET_PROGRESS";
 const SET_ISMOBILE = "main/SET_ISMOBILE";
-const SET_PROFILE = "main/SET_PROFILE";
-const SET_PROFLIST = "main/SET_PROFLIST";
 const SET_SEARCHFORM = "main/SET_ISSEARCHFORM";
 const SET_PROFFORM = "main/SET_PROFFORM";
 
+const SET_PROFILE = "main/SET_PROFILE";
+const SET_LOAD_PROFILE = "main/SET_IS_PROFILE";
+const SET_PROFLIST = "main/SET_PROFLIST";
+const SET_LOAD_PROFLIST = "main/SET_IS_PROFLIST";
+
 const initialState = {
+  progress: null,
   isMobile: false,
   isSearchForm: false,
   isProfileForm: false,
+  loadProfile: false,
   profile: null,
+  loadProfileList: false,
   profileList: [],
 };
 
 export const main = (state = initialState, action) => {
   switch (action.type) {
+    case SET_PROGRESS:
+      return { ...state, progress: action.payload };
+
     case SET_ISMOBILE:
       return { ...state, isMobile: action.payload };
-
-    case SET_PROFILE:
-      return { ...state, profile: action.payload };
-
-    case SET_PROFLIST:
-      return { ...state, profileList: action.payload };
 
     case SET_SEARCHFORM:
       return { ...state, isSearchForm: action.payload };
 
     case SET_PROFFORM:
       return { ...state, isProfileForm: action.payload };
+
+    //
+
+    case SET_LOAD_PROFILE:
+      return { ...state, loadProfile: action.payload };
+
+    case SET_PROFILE:
+      return { ...state, profile: action.payload };
+
+    case SET_LOAD_PROFLIST:
+      return { ...state, loadProfileList: action.payload };
+
+    case SET_PROFLIST:
+      return { ...state, profileList: action.payload };
 
     default:
       return state;
@@ -42,23 +60,57 @@ export const main = (state = initialState, action) => {
 
 // ACTIONS
 
+export const setProgress = (payload) => ({ type: SET_PROGRESS, payload });
 export const setMobile = (payload) => ({ type: SET_ISMOBILE, payload });
 export const setSearchForm = (payload) => ({ type: SET_SEARCHFORM, payload });
 export const setProfileForm = (payload) => ({ type: SET_PROFFORM, payload });
 
+const setLoadProfile = (payload) => ({ type: SET_LOAD_PROFILE, payload });
 export const setProfile = (payload) => ({ type: SET_PROFILE, payload });
+const setLoadProfileList = (payload) => ({ type: SET_LOAD_PROFLIST, payload });
 const setProfileList = (payload) => ({ type: SET_PROFLIST, payload });
 
 // THUNKS
 
-export const getProfile = (id) => (dispatch) => {
-  db.ref(`profiles/${id}`).once("value", (profile) => {
-    dispatch(setProfile(profile.val()));
+export const getProfile = (profileID) => (dispatch) => {
+  if (!profileID) return dispatch(setProfile(null));
+
+  batch(() => {
+    dispatch(setProgress(0));
+    dispatch(setProfile(null));
+    dispatch(setLoadProfile(true));
+  });
+
+  db.ref(`profiles/${profileID}`).once("value", (profile) => {
+    dispatch(setProgress(40));
+    const data = profile.val();
+
+    const promise = storage
+      .ref(data.avatarPath)
+      .listAll()
+      .then((res) => res.items.map((item) => item.getDownloadURL()));
+
+    Promise.resolve(promise)
+      .then((res) => Promise.all(res))
+      .then((urls) => {
+        batch(() => {
+          dispatch(setProgress(100));
+          dispatch(setProfile({ ...data, avatarURL: urls[0] }));
+          dispatch(setLoadProfile(false));
+        });
+      });
   });
 };
 
 export const getProfileList = () => (dispatch) => {
+  batch(() => {
+    dispatch(setProgress(0));
+    dispatch(setLoadProfileList(true));
+  });
+
   db.ref("profiles").once("value", async (profiles) => {
+    dispatch(setProgress(40));
+
     const dbData = profiles.exists() ? Object.values(profiles.val()) : [];
 
     const urlPromise = await dbData.map(async (profile) => {
@@ -68,60 +120,92 @@ export const getProfileList = () => (dispatch) => {
 
     const fulfiled = await Promise.all(urlPromise);
 
-    dispatch(setProfileList(fulfiled));
+    batch(() => {
+      dispatch(setProfileList(fulfiled));
+      dispatch(setLoadProfileList(false));
+      dispatch(setProgress(100));
+    });
   });
 };
 
 export const createProfile = (data, upl) => async (dispatch, getState) => {
+  batch(() => {
+    dispatch(setProgress(0));
+  });
+
   const userID = await getState().init.user.userID;
 
-  const key = (await db.ref("profiles").push()).key;
+  const profileID = (await db.ref("profiles").push()).key;
 
   const newProfile = {
     ...data,
     avatarPath: `profiles/${userID}/avatar`,
-    profileID: key,
-    userID: userID,
+    profileID,
+    userID,
+    stage: 1,
   };
 
   await Promise.all(
     upl.map((photo, num) => imgUploader(photo, num, userID, "avatar/"))
-  ).catch((err) => console.log(err));
+  )
+    .then(() => dispatch(setProgress(40)))
+    .catch((err) => console.log(err));
 
   const onUpdate = (err) => {
     if (err) return console.log(err);
 
-    db.ref(`users/${userID}`)
-      .update({ profileID: key })
-      .then((res) => {
-        console.log(res);
+    dispatch(setProgress(70));
 
+    db.ref(`users/${userID}`)
+      .update({ profileID })
+      .then(() => {
         batch(() => {
           dispatch(setProfileForm(false));
-          dispatch(setUser({ ...getState().init.user, profileID: key }));
+          dispatch(setUser({ ...getState().init.user, profileID }));
+          dispatch(getProfile(profileID));
           dispatch(getProfileList());
+          dispatch(setProgress(100));
         });
       })
       .catch((err) => console.log(err));
   };
 
-  db.ref(`profiles/${key}`).update(newProfile, onUpdate);
+  db.ref(`profiles/${profileID}`).update(newProfile, onUpdate);
 };
 
 export const removeProfile = (profileID) => (dispatch, getState) => {
   const userID = getState().init.user.userID;
+  const profile = getState().main.profile;
 
-  const onSet = (err) => {
+  batch(() => {
+    dispatch(setProgress(0));
+  });
+
+  const onSet = async (err) => {
     if (err) return console.log(err);
 
-    storage.ref(`profiles/${userID}`).delete();
-    db.ref(`users/${userID}`).update({ profileID: null });
+    if (profile.avatarPath) {
+      await storage
+        .ref(profile.avatarPath)
+        .listAll()
+        .then((res) => res.items.forEach((item) => item.delete()))
+        .then(() => dispatch(setProgress(30)))
+        .catch((err) => console.log(err));
+    }
+
+    await db
+      .ref(`users/${userID}`)
+      .update({ profileID: null })
+      .then(() => dispatch(setProgress(60)))
+      .catch((err) => console.log(err));
 
     batch(() => {
+      dispatch(setProgress(100));
+      dispatch(setUser({ ...getState().init.user, profileID: null }));
       dispatch(setProfile(null));
       dispatch(getProfileList());
     });
   };
 
-  db.ref(`profiles/${profileID}`).set(null, onSet);
+  db.ref().child(`profiles/${profileID}`).set(null, onSet);
 };

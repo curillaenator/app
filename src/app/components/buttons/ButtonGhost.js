@@ -25,10 +25,10 @@ const ButtonStyled = styled.button`
   }
 
   &:hover {
-    color: ${colors.fontTitle};
+    color: ${({ fontColorHov }) => fontColorHov};
 
     & > svg {
-      fill: ${colors.fontTitle};
+      fill: ${({ fontColorHov }) => fontColorHov};
     }
   }
 
@@ -51,14 +51,22 @@ export const ButtonGhost = ({
 }) => {
   const fontColor = () => {
     if (disabled) return colors.fontDisabled;
-    if (danger) return colors.fontDanger;
     if (active) return colors.fontActive;
+    if (danger) return colors.fontDanger;
     return colors.primary;
+  };
+
+  const fontColorHover = () => {
+    if (disabled) return colors.fontDisabled;
+    if (active) return colors.fontActive;
+    if (danger) return colors.fontDanger;
+    return colors.fontTitle;
   };
 
   return (
     <ButtonStyled
       fontColor={fontColor()}
+      fontColorHov={fontColorHover()}
       title={title}
       disabled={disabled}
       onClick={handler}

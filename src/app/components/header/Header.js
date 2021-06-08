@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 import { useHistory, useLocation } from "react-router-dom";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import Popup from "reactjs-popup";
 
 import { ButtonGhost } from "../buttons/ButtonGhost";
-import { ButtonRound } from "../buttons/ButtonRound";
+// import { ButtonRound } from "../buttons/ButtonRound";
 
 import { words } from "../../../utils/worder";
 import { icons } from "../../../utils/icons";
@@ -12,17 +12,31 @@ import { colors } from "../../../utils/colors";
 
 import logo from "../../../assets/images/logo.png";
 
+const popup_appear = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+`;
+
 const StyledPopup = styled(Popup)`
   &-overlay {
   }
 
   &-content {
-    .menu {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      padding-top: 16px;
-    }
+    animation: ${popup_appear} 0.16s ease-out;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-top: 16px;
+    border-radius: 16px;
+    background-color: ${colors.bgWhite};
+    filter: drop-shadow(0 10px 12px ${colors.shadow});
   }
 `;
 
@@ -146,7 +160,7 @@ export const Header = ({ isMobile, user, signIn, signOut }) => {
             closeOnDocumentClick
           >
             {(close) => (
-              <div className="menu">
+              <>
                 {location.pathname !== "/profile" && (
                   <ButtonGhost
                     title="Мой профиль"
@@ -159,6 +173,15 @@ export const Header = ({ isMobile, user, signIn, signOut }) => {
                 )}
 
                 <ButtonGhost
+                  title="Мои диалоги"
+                  icon={icons.chat}
+                  handler={() => {
+                    // signOut();
+                    close();
+                  }}
+                />
+
+                <ButtonGhost
                   title="Выйти"
                   icon={icons.logout}
                   handler={() => {
@@ -166,13 +189,13 @@ export const Header = ({ isMobile, user, signIn, signOut }) => {
                     close();
                   }}
                 />
-              </div>
+              </>
             )}
           </StyledPopup>
 
-          <div className="buttons_btn">
+          {/* <div className="buttons_btn">
             <ButtonRound icon={icons.chat} />
-          </div>
+          </div> */}
         </div>
       )}
     </HeaderStyled>

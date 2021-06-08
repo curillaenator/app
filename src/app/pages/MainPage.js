@@ -8,6 +8,7 @@ import {
   setSearchForm,
 } from "../../redux/reducers/main";
 
+import { LoaderLocal } from "../components/loader/LoaderLocal";
 import { Welcome } from "../components/welcome/Welcome";
 import { Cta } from "../components/cta/Cta";
 import { SearchForm } from "../components/formsearch/FormSearch";
@@ -19,6 +20,7 @@ import { words } from "../../utils/worder";
 const MainPageStyled = styled.div``;
 
 const Main = ({
+  loadProfileList,
   profileList,
   setProfile,
   isSearchForm,
@@ -41,12 +43,15 @@ const Main = ({
 
       {isSearchForm && <SearchForm />}
 
-      <UserList profileList={profileList} />
+      {loadProfileList && <LoaderLocal />}
+
+      {!loadProfileList && <UserList profileList={profileList} />}
     </MainPageStyled>
   );
 };
 
 const mstp = (state) => ({
+  loadProfileList: state.main.loadProfileList,
   profileList: state.main.profileList,
   isSearchForm: state.main.isSearchForm,
 });
