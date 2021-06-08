@@ -104,10 +104,10 @@ const FormStyled = styled.form`
   }
 `;
 
-export const FormProfile = ({ createNewProfile }) => {
+export const FormProfile = ({ createProfile }) => {
   const [uploads, setUploads] = useState([]);
 
-  const onSubmit = (formData) => createNewProfile(formData, uploads);
+  const onSubmit = (formData) => createProfile(formData, uploads);
 
   return (
     <Form

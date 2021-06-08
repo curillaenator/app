@@ -3,18 +3,16 @@ import { connect } from "react-redux";
 import { useParams, Redirect } from "react-router-dom";
 import styled from "styled-components";
 
-import { signOut } from "../../redux/reducers/init";
 import {
   getProfile,
   setProfileForm,
-  createNewProfile,
+  createProfile,
+  removeProfile,
 } from "../../redux/reducers/main";
 
 import { Welcome } from "../components/welcome/Welcome";
 import { Cta } from "../components/cta/Cta";
 import { FormProfile } from "../components/formprofile/FormProfile";
-import { Controls } from "../components/controls/Controls";
-// import { ButtonOutline } from "../components/buttons/ButtonOutline";
 
 // import { colors } from "../../utils/colors";
 import { words } from "../../utils/worder";
@@ -30,23 +28,23 @@ const Profile = ({
   isProfileForm,
   setProfileForm,
   getProfile,
-  signOut,
-  createNewProfile,
+  createProfile,
+  removeProfile,
 }) => {
   const { id } = useParams();
 
   useEffect(() => {
     if (id) return getProfile(id);
     return getProfile(user.profileID);
-  }, [id, getProfile]);
+  }, [id, user.profileID, getProfile]);
 
   if (!id && !user.userID) return <Redirect to="/" />;
 
-  if (!profile) return <div></div>;
+  if (!user) return <div></div>;
 
   return (
     <PageStyled>
-      {profile.userID === user.userID && !user.profileID && (
+      {!id && user.userID && !user.profileID && (
         <div className="if_owner_wo_profile">
           <Welcome title={words.profileTitle} />
 
@@ -57,19 +55,13 @@ const Profile = ({
             buttonIcon={icons.create}
           />
 
-          {isProfileForm && <FormProfile createNewProfile={createNewProfile} />}
+          {isProfileForm && <FormProfile createProfile={createProfile} />}
         </div>
       )}
 
-      {profile.userID === user.userID && user.profileID && (
-        <div className="if_owner_with_profile">
-          <Controls signOut={signOut} />
-        </div>
-      )}
-
-      {user.profileID && <ProfileStyled>
-          <div></div>
-        </ProfileStyled>}
+      <ProfileStyled>
+        <div></div>
+      </ProfileStyled>
     </PageStyled>
   );
 };
@@ -82,7 +74,7 @@ const mstp = (state) => ({
 
 export const ProfilePage = connect(mstp, {
   getProfile,
-  signOut,
   setProfileForm,
-  createNewProfile,
+  createProfile,
+  removeProfile,
 })(Profile);

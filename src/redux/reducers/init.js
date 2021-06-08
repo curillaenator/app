@@ -2,12 +2,10 @@ import { batch } from "react-redux";
 import { fb, auth, db } from "../../utils/firebase";
 
 const SET_IS_INIT = "init/SET_IS_INIT";
-const SET_IS_AUTH = "init/SET_IS_AUTH";
 const SET_USER = "init/SET_USER";
 
 const initialState = {
   isInit: false,
-  isAuth: false,
   user: null,
 };
 
@@ -15,9 +13,6 @@ export const init = (state = initialState, action) => {
   switch (action.type) {
     case SET_IS_INIT:
       return { ...state, isInit: action.payload };
-
-    case SET_IS_AUTH:
-      return { ...state, isAuth: action.payload };
 
     case SET_USER:
       return { ...state, user: action.payload };
@@ -30,7 +25,6 @@ export const init = (state = initialState, action) => {
 // ACTIONS
 
 const setInit = (payload) => ({ type: SET_IS_INIT, payload });
-const setAuth = (payload) => ({ type: SET_IS_AUTH, payload });
 export const setUser = (payload) => ({ type: SET_USER, payload });
 
 // THUNKS
@@ -62,30 +56,26 @@ export const signIn = () => async (dispatch) => {
 export const signOut = () => (dispatch) => {
   auth.signOut().then(() => {
     batch(() => {
-      dispatch(setAuth(false));
-      dispatch(setUser({ userID: null }));
+      dispatch(setUser({ userID: null, isAdmin: false }));
     });
   });
 };
 
 export const signCheck = () => (dispatch) => {
-  const setState = (user, isAuth, isInit) => {
+  const setState = (user, isInit) => {
     batch(() => {
       dispatch(setUser(user));
-      dispatch(setAuth(isAuth));
       dispatch(setInit(isInit));
     });
   };
 
   auth.onAuthStateChanged((user) => {
-    // console.log(user);
-
-    if (!user) setState({ userID: null, isAdmin: false }, false, true);
+    if (!user) setState({ userID: null, isAdmin: false }, true);
 
     if (user) {
       db.ref(`users/${user.uid}`).on("value", (userData) => {
         if (userData.exists()) {
-          setState(userData.val(), true, true);
+          setState(userData.val(), true);
           db.ref(`users/${user.uid}`).off();
         }
       });

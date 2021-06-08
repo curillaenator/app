@@ -1,5 +1,5 @@
 import { batch } from "react-redux";
-import { db } from "../../utils/firebase";
+import { db, storage } from "../../utils/firebase";
 import { imgUploader, getAvatar } from "../../utils/helpers";
 
 import { setUser } from "./init";
@@ -72,7 +72,7 @@ export const getProfileList = () => (dispatch) => {
   });
 };
 
-export const createNewProfile = (data, upl) => async (dispatch, getState) => {
+export const createProfile = (data, upl) => async (dispatch, getState) => {
   const userID = await getState().init.user.userID;
 
   const key = (await db.ref("profiles").push()).key;
@@ -106,4 +106,22 @@ export const createNewProfile = (data, upl) => async (dispatch, getState) => {
   };
 
   db.ref(`profiles/${key}`).update(newProfile, onUpdate);
+};
+
+export const removeProfile = (profileID) => (dispatch, getState) => {
+  const userID = getState().init.user.userID;
+
+  const onSet = (err) => {
+    if (err) return console.log(err);
+
+    storage.ref(`profiles/${userID}`).delete();
+    db.ref(`users/${userID}`).update({ profileID: null });
+
+    batch(() => {
+      dispatch(setProfile(null));
+      dispatch(getProfileList());
+    });
+  };
+
+  db.ref(`profiles/${profileID}`).set(null, onSet);
 };

@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Switch, Route } from "react-router-dom";
 import styled from "styled-components";
 
-import { signCheck, signIn } from "../redux/reducers/init";
+import { signCheck, signIn, signOut } from "../redux/reducers/init";
 import { setMobile } from "../redux/reducers/main";
 
 import { MainPage } from "./pages/MainPage";
@@ -29,11 +29,11 @@ const Container = styled.div`
 
 const ArtApp = ({
   isInit,
-  isAuth,
   user,
   isMobile,
   signCheck,
   signIn,
+  signOut,
   setMobile,
 }) => {
   useEffect(() => {
@@ -50,7 +50,12 @@ const ArtApp = ({
 
   return (
     <Container>
-      <Header isAuth={isAuth} user={user} signIn={signIn} isMobile={isMobile} />
+      <Header
+        user={user}
+        signIn={signIn}
+        signOut={signOut}
+        isMobile={isMobile}
+      />
 
       <Switch>
         <Route exact path="/" render={() => <MainPage />} />
@@ -62,9 +67,10 @@ const ArtApp = ({
 
 const mstp = (state) => ({
   isInit: state.init.isInit,
-  isAuth: state.init.isAuth,
   user: state.init.user,
   isMobile: state.main.isMobile,
 });
 
-export const App = connect(mstp, { setMobile, signCheck, signIn })(ArtApp);
+export const App = connect(mstp, { setMobile, signCheck, signIn, signOut })(
+  ArtApp
+);

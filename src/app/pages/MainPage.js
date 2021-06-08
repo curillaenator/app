@@ -4,7 +4,6 @@ import styled from "styled-components";
 
 import {
   setProfile,
-  // getUserList,
   getProfileList,
   setSearchForm,
 } from "../../redux/reducers/main";
@@ -20,11 +19,9 @@ import { words } from "../../utils/worder";
 const MainPageStyled = styled.div``;
 
 const Main = ({
-  // userList,
   profileList,
   setProfile,
   isSearchForm,
-  // getUserList,
   getProfileList,
   setSearchForm,
 }) => {
@@ -50,14 +47,12 @@ const Main = ({
 };
 
 const mstp = (state) => ({
-  // userList: state.main.userList,
   profileList: state.main.profileList,
   isSearchForm: state.main.isSearchForm,
 });
 
 export const MainPage = connect(mstp, {
   setProfile,
-  // getUserList,
   getProfileList,
   setSearchForm,
 })(Main);

@@ -1,13 +1,64 @@
 import { Link } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import styled from "styled-components";
+import Popup from "reactjs-popup";
 
-import { User } from "../user/User";
 import { ButtonGhost } from "../buttons/ButtonGhost";
+import { ButtonRound } from "../buttons/ButtonRound";
 
 import { words } from "../../../utils/worder";
+import { icons } from "../../../utils/icons";
 import { colors } from "../../../utils/colors";
 
 import logo from "../../../assets/images/logo.png";
+
+const StyledPopup = styled(Popup)`
+  &-overlay {
+  }
+
+  &-content {
+    .menu {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      padding-top: 16px;
+    }
+  }
+`;
+
+const UserStyled = styled.div`
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: ${colors.primary};
+  transition: 0.08s linear;
+  cursor: pointer;
+
+  & > p {
+    font-size: 18px;
+    font-weight: 800;
+    margin-right: 8px;
+  }
+
+  & > img {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  &:hover {
+    transform: ${({ open }) => (open ? "scale(1)" : "scale(1.02)")};
+    filter: drop-shadow(
+      0 8px 8px ${({ open }) => (open ? "transparent" : colors.shadow)}
+    );
+  }
+
+  &:active {
+    transform: scale(1);
+    filter: none;
+  }
+`;
 
 const LogoStyled = styled(Link)`
   display: flex;
@@ -31,7 +82,7 @@ const LogoStyled = styled(Link)`
 
   &:hover {
     transform: scale(1.02);
-    filter: drop-shadow(0 6px 4px ${colors.shadow});
+    filter: drop-shadow(0 8px 8px ${colors.shadow});
   }
 
   &:active {
@@ -46,6 +97,15 @@ const HeaderStyled = styled.header`
   align-items: center;
   height: 120px;
 
+  .buttons {
+    display: flex;
+    align-items: center;
+
+    &_btn {
+      margin-left: 16px;
+    }
+  }
+
   @media (min-width: 768px) {
     margin-top: 24px;
   }
@@ -55,7 +115,10 @@ const HeaderStyled = styled.header`
   }
 `;
 
-export const Header = ({ user, signIn, isMobile }) => {
+export const Header = ({ isMobile, user, signIn, signOut }) => {
+  const history = useHistory();
+  const location = useLocation();
+
   return (
     <HeaderStyled>
       <LogoStyled to="/">
@@ -69,7 +132,49 @@ export const Header = ({ user, signIn, isMobile }) => {
         </div>
       )}
 
-      {user.userID && <User user={user} isMobile={isMobile} />}
+      {user.userID && (
+        <div className="buttons">
+          <StyledPopup
+            trigger={(open) => (
+              <UserStyled open={open}>
+                {!isMobile && <p>{user.username}</p>}
+                <img src={user.avatar} alt={user.username} />
+              </UserStyled>
+            )}
+            arrow={false}
+            position="bottom right"
+            closeOnDocumentClick
+          >
+            {(close) => (
+              <div className="menu">
+                {location.pathname !== "/profile" && (
+                  <ButtonGhost
+                    title="Мой профиль"
+                    icon={icons.profile}
+                    handler={() => {
+                      history.push("/profile");
+                      close();
+                    }}
+                  />
+                )}
+
+                <ButtonGhost
+                  title="Выйти"
+                  icon={icons.logout}
+                  handler={() => {
+                    signOut();
+                    close();
+                  }}
+                />
+              </div>
+            )}
+          </StyledPopup>
+
+          <div className="buttons_btn">
+            <ButtonRound icon={icons.chat} />
+          </div>
+        </div>
+      )}
     </HeaderStyled>
   );
 };
