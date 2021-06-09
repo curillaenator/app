@@ -80,6 +80,7 @@ const LogoStyled = styled(Link)`
   text-decoration: none;
   transition: 0.08s linear;
   cursor: pointer;
+  will-change: filter;
 
   .image {
     width: 56px;
@@ -129,7 +130,7 @@ const HeaderStyled = styled.header`
   }
 `;
 
-export const Header = ({ isMobile, user, signIn, signOut }) => {
+export const Header = ({ isMobile, user, signIn, signOut, setIsChat }) => {
   const history = useHistory();
   const location = useLocation();
 
@@ -176,7 +177,7 @@ export const Header = ({ isMobile, user, signIn, signOut }) => {
                   title="Мои диалоги"
                   icon={icons.chat}
                   handler={() => {
-                    // signOut();
+                    setIsChat(true);
                     close();
                   }}
                 />

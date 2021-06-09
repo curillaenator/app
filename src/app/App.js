@@ -6,11 +6,13 @@ import ProgressBar from "@ramonak/react-progress-bar";
 
 import { signCheck, signIn, signOut } from "../redux/reducers/init";
 import { setMobile, setProgress } from "../redux/reducers/main";
+import { setIsChat, getChatRooms } from "../redux/reducers/chat";
 
 import { LoaderFS } from "./components/loader/LoaderFS";
 import { MainPage } from "./pages/MainPage";
 import { ProfilePage } from "./pages/ProfilePage";
 import { Header } from "./components/header/Header";
+import { Chat } from "./components/chat/Chat";
 
 import { colors } from "../utils/colors";
 
@@ -49,7 +51,11 @@ const ArtApp = ({
   signOut,
   setProgress,
   setMobile,
+  setIsChat,
+  getChatRooms,
 }) => {
+  // Chek mobile mode
+
   useEffect(() => {
     const watchResize = () => {
       window.innerWidth < 768 ? setMobile(true) : setMobile(false);
@@ -58,7 +64,15 @@ const ArtApp = ({
     window.addEventListener("resize", watchResize);
   }, [setMobile]);
 
+  // Check if signed in or not
+
   useEffect(() => signCheck(), [signCheck]);
+
+  // If signed in , then get chat rooms
+
+  useEffect(() => isInit && getChatRooms(), [isInit, getChatRooms]);
+
+  // Handle progress bar
 
   useEffect(() => {
     progress === 100 && setTimeout(() => setProgress(null), 1200);
@@ -81,10 +95,13 @@ const ArtApp = ({
 
       <Header
         user={user}
+        isMobile={isMobile}
         signIn={signIn}
         signOut={signOut}
-        isMobile={isMobile}
+        setIsChat={setIsChat}
       />
+
+      <Chat />
 
       <Switch>
         <Route exact path="/" render={() => <MainPage />} />
@@ -107,4 +124,6 @@ export const App = connect(mstp, {
   signCheck,
   signIn,
   signOut,
+  setIsChat,
+  getChatRooms,
 })(ArtApp);

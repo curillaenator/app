@@ -15,6 +15,8 @@ import {
   removeJobExperience,
 } from "../../redux/reducers/main";
 
+import { goChat } from "../../redux/reducers/chat";
+
 import { LoaderLocal } from "../components/loader/LoaderLocal";
 import { Welcome } from "../components/welcome/Welcome";
 import { Controls } from "../components/controls/Controls";
@@ -45,6 +47,7 @@ const Profile = ({
   addJobExperience,
   updateJobExperience,
   removeJobExperience,
+  goChat,
 }) => {
   const { id } = useParams();
 
@@ -77,9 +80,11 @@ const Profile = ({
       {!loadProfile && profile && (
         <div className="if_owner_with_profile_stage1">
           <Controls
+            isAuth={!!user.userID}
             isMobile={isMobile}
             isOwner={user && user.userID === profile.userID}
             removeProfile={() => removeProfile(user.profileID)}
+            goChat={goChat}
           />
 
           <ProfileBlockOne
@@ -142,4 +147,5 @@ export const ProfilePage = connect(mstp, {
   addJobExperience,
   updateJobExperience,
   removeJobExperience,
+  goChat,
 })(Profile);

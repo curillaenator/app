@@ -20,7 +20,13 @@ const ControlsStyled = styled.div`
   }
 `;
 
-export const Controls = ({ isMobile, isOwner, removeProfile }) => {
+export const Controls = ({
+  isAuth,
+  isMobile,
+  isOwner,
+  removeProfile,
+  goChat,
+}) => {
   const history = useHistory();
 
   const deleteItems = [
@@ -39,8 +45,8 @@ export const Controls = ({ isMobile, isOwner, removeProfile }) => {
         />
       </div>
 
-      {isOwner && (
-        <div className="pad">
+      <div className="pad">
+        {isOwner && (
           <Dropdown
             title={isMobile ? "Удалить профиль" : "Удалить мой профиль"}
             icon={icons.delete}
@@ -48,8 +54,18 @@ export const Controls = ({ isMobile, isOwner, removeProfile }) => {
             items={deleteItems}
             danger
           />
-        </div>
-      )}
+        )}
+
+        {!isOwner && (
+          <ButtonGhost
+            title={isMobile ? "" : "Написать"}
+            icon={icons.chat}
+            iconsize={isMobile ? 26 : 18}
+            disabled={!isAuth}
+            handler={() => goChat()}
+          />
+        )}
+      </div>
     </ControlsStyled>
   );
 };

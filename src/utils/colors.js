@@ -5,6 +5,7 @@ export const colors = {
   shadow: "#36363631",
   bgLightGray: "#f3f3f3",
   bgWhite: "#ffffff",
+  bgWhiteOpaque: "#ffffff75",
   bgShape: "#d5d5d5",
   fontTitle: "#8aa376",
   fontBlack: "#363636",
