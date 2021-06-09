@@ -44,6 +44,8 @@ const setCurRoom = (payload) => ({ type: SET_CUR_ROOM, payload });
 export const getChatRooms = () => (dispatch, getState) => {
   const userID = getState().init.user.userID;
 
+  if (!userID) return dispatch(setChatRooms({}));
+
   db.ref(`chatrooms/${userID}`).on("child_added", (room) => {
     db.ref(`users/${room.val().opponentID}`).once("value", (opponSn) => {
       const opponent = {
@@ -133,4 +135,16 @@ export const handleCurRoom = (roomID) => async (dispatch, getState) => {
       dispatch(setCurOppon(null));
     });
   }
+};
+
+export const chatOnSignOut = () => (dispatch, getState) => {
+  const userID = getState().init.user.userID;
+  db.ref(`chatrooms/${userID}`).off();
+
+  batch(() => {
+    dispatch(setChatRooms({}));
+    dispatch(setCurRoom(null));
+    dispatch(setCurOppon(null));
+    dispatch(setIsChat(false));
+  });
 };

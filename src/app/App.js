@@ -70,7 +70,7 @@ const ArtApp = ({
 
   // If signed in , then get chat rooms
 
-  useEffect(() => isInit && getChatRooms(), [isInit, getChatRooms]);
+  useEffect(() => isInit && getChatRooms(), [isInit, getChatRooms, user]);
 
   // Handle progress bar
 

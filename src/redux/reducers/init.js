@@ -1,6 +1,8 @@
 import { batch } from "react-redux";
 import { fb, auth, db } from "../../utils/firebase";
 
+import { chatOnSignOut } from "./chat";
+
 const SET_IS_INIT = "init/SET_IS_INIT";
 const SET_USER = "init/SET_USER";
 
@@ -57,6 +59,7 @@ export const signOut = () => (dispatch) => {
   auth.signOut().then(() => {
     batch(() => {
       dispatch(setUser({ userID: null, isAdmin: false }));
+      dispatch(chatOnSignOut());
     });
   });
 };
