@@ -34,6 +34,17 @@ export const words = {
   },
   searchPh: 'напишите ключевое слово (например "фронтенд")',
   profForm: {
+    stepOne: (
+      <span>
+        Шаг <span style={{ color: colors.fontTitle }}>1</span> - Кто вы?
+      </span>
+    ),
+    stepOneEdit: (
+      <span>
+        Редактируйте{" "}
+        <span style={{ color: colors.fontTitle }}>ваши данные</span>
+      </span>
+    ),
     name: (
       <span>
         Ваше <span style={{ color: colors.fontTitle }}>полное имя</span>:
@@ -55,11 +66,6 @@ export const words = {
     photo: (
       <span>
         Ваше лучшее <span style={{ color: colors.fontTitle }}>фото</span>:
-      </span>
-    ),
-    stepOne: (
-      <span>
-        Шаг <span style={{ color: colors.fontTitle }}>1</span> - Кто вы?
       </span>
     ),
   },

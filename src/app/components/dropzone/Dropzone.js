@@ -3,14 +3,25 @@ import { useDropzone } from "react-dropzone";
 import styled from "styled-components";
 import Resizer from "react-image-file-resizer";
 
+import { ButtonOutline } from "../buttons/ButtonOutline";
+
 import { colors } from "../../../utils/colors";
+import { icons } from "../../../utils/icons";
 
 const SinglePhoto = styled.div`
+  position: relative;
+
   .photo_img {
     width: 100%;
     height: 100%;
     border-radius: 16px;
     object-fit: contain;
+  }
+
+  .photo_delete {
+    position: absolute;
+    top: 16px;
+    right: 16px;
   }
 `;
 
@@ -85,6 +96,14 @@ export const Dropzone = ({ uploads, setUploads, limit = 1 }) => {
           }
           alt=""
         />
+
+        <div className="photo_delete">
+          <ButtonOutline
+            title="Изменить фото"
+            icon={icons.back}
+            handler={() => setUploads([])}
+          />
+        </div>
       </SinglePhoto>
     );
   }

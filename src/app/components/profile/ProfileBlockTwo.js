@@ -106,7 +106,7 @@ export const ProfileBlockTwo = ({
   removeJobExperience,
 }) => {
   const [addForm, setAddForm] = useState(false);
-  const [jobEdit, setJobEdit] = useState(null);
+  const [editForm, setEditForm] = useState(null);
 
   const jobs = Object.values(profile.jobExp || {});
 
@@ -126,17 +126,17 @@ export const ProfileBlockTwo = ({
 
       {jobs.map((job) => (
         <div className="job_container" key={job.jobID}>
-          {jobEdit === job.jobID && (
+          {editForm === job.jobID && (
             <FormProfileTwo
               edit
               editID={job.jobID}
               initValues={job}
-              setForm={() => setJobEdit(null)}
+              setForm={() => setEditForm(null)}
               updateJobExperience={updateJobExperience}
             />
           )}
 
-          <JobStyled hide={jobEdit === job.jobID}>
+          <JobStyled hide={editForm === job.jobID}>
             <div className="job__header">
               <h2 className="job__header_title">{job.company}</h2>
 
@@ -146,7 +146,7 @@ export const ProfileBlockTwo = ({
                     title={isMobile ? "" : "Редактировать"}
                     icon={icons.edit}
                     iconsize={isMobile ? 26 : 18}
-                    handler={() => setJobEdit(job.jobID)}
+                    handler={() => setEditForm(job.jobID)}
                   />
                   <Dropdown
                     delID={job.jobID}

@@ -11,6 +11,7 @@ const ButtonStyled = styled.button`
   padding: 16px;
   border-radius: 16px;
   border: 2px solid ${({ fontColor }) => fontColor};
+  background-color: ${colors.bgLightGray};
   font-size: 14px;
   font-weight: 700;
   transition: 0.08s linear;
@@ -19,24 +20,35 @@ const ButtonStyled = styled.button`
   cursor: ${({ disabled }) => (disabled ? "default" : "pointer")};
 
   & > svg {
+    width: ${({ iconsize }) => iconsize}px;
+    height: ${({ iconsize }) => iconsize}px;
+    fill: ${({ fontColor }) => fontColor};
     margin-right: ${({ title }) => (title ? "8px" : "0")};
+    transition: 0.08s linear;
   }
 
   &:hover {
-    transform: ${({ disabled }) =>
-      disabled ? "none" : "scale3d(1.02, 1.02, 1)"};
-    filter: ${({ disabled }) =>
-      disabled ? "default" : "drop-shadow(0 6px 4px #36363631)"};
+    border: 2px solid ${({ fontColorHov }) => fontColorHov};
+    color: ${({ fontColorHov }) => fontColorHov};
+
+    & > svg {
+      fill: ${({ fontColorHov }) => fontColorHov};
+    }
   }
 
   &:active {
-    transform: scale3d(1, 1, 1);
-    filter: none;
+    border: 2px solid ${({ fontColor }) => fontColor};
+    color: ${({ fontColor }) => fontColor};
+
+    & > svg {
+      fill: ${({ fontColor }) => fontColor};
+    }
   }
 `;
 
 export const ButtonOutline = ({
   icon,
+  iconsize = 18,
   title,
   active = false,
   danger = false,
@@ -45,14 +57,23 @@ export const ButtonOutline = ({
 }) => {
   const fontColor = () => {
     if (disabled) return colors.fontDisabled;
-    if (danger) return colors.fontDanger;
     if (active) return colors.fontActive;
+    if (danger) return colors.fontDanger;
     return colors.primary;
+  };
+
+  const fontColorHover = () => {
+    if (disabled) return colors.fontDisabled;
+    if (active) return colors.fontActive;
+    if (danger) return colors.fontDanger;
+    return colors.fontTitle;
   };
 
   return (
     <ButtonStyled
+      iconsize={iconsize}
       fontColor={fontColor()}
+      fontColorHov={fontColorHover()}
       title={title}
       disabled={disabled}
       onClick={handler}

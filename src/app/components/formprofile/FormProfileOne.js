@@ -1,11 +1,11 @@
-// import { useRef } from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Form, Field } from "react-final-form";
 import styled from "styled-components";
 
 import { Dropzone } from "../dropzone/Dropzone";
 import { Textarea } from "../inputs/Textarea";
 import { Button } from "../buttons/Button";
+import { ButtonGhost } from "../buttons/ButtonGhost";
 
 import { colors } from "../../../utils/colors";
 import { words } from "../../../utils/worder";
@@ -20,11 +20,17 @@ const FormStyled = styled.form`
     border-radius: 24px;
     background-color: ${colors.bgShape};
 
-    &_title {
-      font-size: 32px;
-      font-weight: 700;
-      margin-bottom: 16px;
-      color: ${colors.primary};
+    &_header {
+      display: flex;
+      aling-items: center;
+      justify-content: space-between;
+
+      &-title {
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 16px;
+        color: ${colors.primary};
+      }
     }
 
     .field {
@@ -104,19 +110,61 @@ const FormStyled = styled.form`
   }
 `;
 
-export const FormProfileOne = ({ createProfile }) => {
+export const FormProfileOne = ({
+  initValues = {},
+  edit = false,
+  setForm = () => {},
+  createProfile = () => {},
+  editProfile = () => {},
+}) => {
   const [uploads, setUploads] = useState([]);
 
-  const onSubmit = (formData) => createProfile(formData, uploads);
+  useEffect(() => {
+    if (initValues.avatarURL) return setUploads([initValues.avatarURL]);
+  }, [initValues.avatarURL]);
+
+  const onSubmit = (formData) => {
+    setForm();
+    if (!edit) return createProfile(formData, uploads);
+    if (edit) return editProfile(formData, uploads);
+  };
 
   return (
     <Form
       onSubmit={onSubmit}
+      initialValues={initValues}
       render={({ handleSubmit, form }) => {
+        const close = (e) => {
+          e.preventDefault();
+          setForm();
+        };
+
         return (
           <FormStyled onSubmit={handleSubmit}>
             <div className="form">
-              <h2 className="form_title">{words.profForm.stepOne}</h2>
+              <div className="form_header">
+                {!edit && (
+                  <h2 className="form_header-title">
+                    {words.profForm.stepOne}
+                  </h2>
+                )}
+
+                {edit && (
+                  <h2 className="form_header-title">
+                    {words.profForm.stepOneEdit}
+                  </h2>
+                )}
+
+                {edit && (
+                  <div className="form_header-close">
+                    <ButtonGhost
+                      icon={icons.close}
+                      iconsize={32}
+                      handler={close}
+                    />
+                  </div>
+                )}
+              </div>
 
               <div className="field">
                 <div className="field_pad">

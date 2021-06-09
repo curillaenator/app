@@ -179,6 +179,37 @@ export const createProfile = (data, upl) => async (dispatch, getState) => {
   db.ref(`profiles/${profileID}`).update(newProfile, onUpdate);
 };
 
+export const editProfile = (data, upl) => async (dispatch, getState) => {
+  delete data.avatarURL;
+
+  batch(() => {
+    dispatch(setProgress(0));
+    dispatch(setLoadProfile(true));
+  });
+
+  const userID = getState().init.user.userID;
+  const profileID = getState().init.user.profileID;
+
+  if (typeof upl[0] !== "string") {
+    await Promise.all(
+      upl.map((photo, num) => imgUploader(photo, num, userID, "avatar/"))
+    )
+      .then(() => dispatch(setProgress(70)))
+      .catch((err) => console.log(err));
+  }
+
+  const onUpdate = (err) => {
+    if (err) return console.log(err);
+
+    batch(() => {
+      dispatch(setProgress(100));
+      dispatch(getProfile(profileID));
+    });
+  };
+
+  db.ref(`profiles/${profileID}`).update(data, onUpdate);
+};
+
 export const removeProfile = (profileID) => (dispatch, getState) => {
   const userID = getState().init.user.userID;
   const profile = getState().main.profile;

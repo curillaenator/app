@@ -8,6 +8,7 @@ import {
   setStage1Form,
   setStage2Form,
   createProfile,
+  editProfile,
   removeProfile,
   addJobExperience,
   updateJobExperience,
@@ -39,6 +40,7 @@ const Profile = ({
   setStage2Form,
   getProfile,
   createProfile,
+  editProfile,
   removeProfile,
   addJobExperience,
   updateJobExperience,
@@ -84,6 +86,7 @@ const Profile = ({
             isMobile={isMobile}
             isOwner={user && user.userID === profile.userID}
             profile={profile}
+            editProfile={editProfile}
           />
 
           {profile.jobExp && (
@@ -134,6 +137,7 @@ export const ProfilePage = connect(mstp, {
   setStage1Form,
   setStage2Form,
   createProfile,
+  editProfile,
   removeProfile,
   addJobExperience,
   updateJobExperience,
