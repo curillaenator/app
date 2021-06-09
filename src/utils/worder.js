@@ -70,6 +70,17 @@ export const words = {
         работы?
       </span>
     ),
+    stepTwoAdd: (
+      <span>
+        Добавьте <span style={{ color: colors.fontTitle }}>место работы</span>
+      </span>
+    ),
+    stepTwoEdit: (
+      <span>
+        Отредактируйте{" "}
+        <span style={{ color: colors.fontTitle }}>место работы</span>
+      </span>
+    ),
     workStart: (
       <span>
         <span style={{ color: colors.fontTitle }}>Начало</span> работы:

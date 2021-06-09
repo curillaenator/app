@@ -10,20 +10,21 @@ import {
   createProfile,
   removeProfile,
   addJobExperience,
+  updateJobExperience,
+  removeJobExperience,
 } from "../../redux/reducers/main";
 
 import { LoaderLocal } from "../components/loader/LoaderLocal";
 import { Welcome } from "../components/welcome/Welcome";
-// import { ButtonGhost } from "../components/buttons/ButtonGhost";
 import { Controls } from "../components/controls/Controls";
 import { Cta } from "../components/cta/Cta";
 import { FormProfileOne } from "../components/formprofile/FormProfileOne";
 import { FormProfileTwo } from "../components/formprofile/FormProfileTwo";
 import { ProfileBlockOne } from "../components/profile/ProfileBlockOne";
+import { ProfileBlockTwo } from "../components/profile/ProfileBlockTwo";
 
 import { words } from "../../utils/worder";
 import { icons } from "../../utils/icons";
-// import { colors } from "../../utils/colors";
 
 const PageStyled = styled.div``;
 
@@ -40,6 +41,8 @@ const Profile = ({
   createProfile,
   removeProfile,
   addJobExperience,
+  updateJobExperience,
+  removeJobExperience,
 }) => {
   const { id } = useParams();
 
@@ -77,24 +80,42 @@ const Profile = ({
             removeProfile={() => removeProfile(user.profileID)}
           />
 
-          <ProfileBlockOne profile={profile} />
-        </div>
-      )}
-
-      {!loadProfile && profile && profile.stage === 1 && (
-        <div>
-          <Cta
-            isForm={isStage2Form}
-            setForm={setStage2Form}
-            buttonTtl={words.stage2btn}
-            buttonIcon={icons.create}
+          <ProfileBlockOne
+            isMobile={isMobile}
+            isOwner={user && user.userID === profile.userID}
+            profile={profile}
           />
 
-          {isStage2Form && (
-            <FormProfileTwo addJobExperience={addJobExperience} />
+          {profile.jobExp && (
+            <ProfileBlockTwo
+              isMobile={isMobile}
+              isOwner={user && user.userID === profile.userID}
+              profile={profile}
+              addJobExperience={addJobExperience}
+              updateJobExperience={updateJobExperience}
+              removeJobExperience={removeJobExperience}
+            />
           )}
         </div>
       )}
+
+      {!loadProfile &&
+        profile &&
+        profile.userID === user.userID &&
+        profile.stage === 1 && (
+          <div>
+            <Cta
+              isForm={isStage2Form}
+              setForm={setStage2Form}
+              buttonTtl={words.stage2btn}
+              buttonIcon={icons.create}
+            />
+
+            {isStage2Form && (
+              <FormProfileTwo addJobExperience={addJobExperience} />
+            )}
+          </div>
+        )}
     </PageStyled>
   );
 };
@@ -115,4 +136,6 @@ export const ProfilePage = connect(mstp, {
   createProfile,
   removeProfile,
   addJobExperience,
+  updateJobExperience,
+  removeJobExperience,
 })(Profile);

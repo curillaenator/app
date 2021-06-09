@@ -8,6 +8,7 @@ import ru from "date-fns/locale/ru";
 import { TextInput } from "../inputs/Textinput";
 import { Textarea } from "../inputs/Textarea";
 import { Button } from "../buttons/Button";
+import { ButtonGhost } from "../buttons/ButtonGhost";
 
 import { colors } from "../../../utils/colors";
 import { words } from "../../../utils/worder";
@@ -77,11 +78,20 @@ const FormStyled = styled.form`
     border-radius: 24px;
     background-color: ${colors.bgShape};
 
-    &_title {
-      font-size: 32px;
-      font-weight: 700;
-      margin-bottom: 32px;
-      color: ${colors.primary};
+    &__header {
+      display: flex;
+      justify-content: space-between;
+      aling-items: center;
+
+      &_title {
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 32px;
+        color: ${colors.primary};
+      }
+
+      &_close {
+      }
     }
 
     &__job {
@@ -117,24 +127,76 @@ const FormStyled = styled.form`
   }
 `;
 
-export const FormProfileTwo = ({ addJobExperience }) => {
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+export const FormProfileTwo = ({
+  editID = null,
+  initValues = {},
+  add = false,
+  edit = false,
+  setForm = () => {},
+  addJobExperience = () => {},
+  updateJobExperience = () => {},
+}) => {
+  const [startDate, setStartDt] = useState(new Date());
+  const [endDate, setEndDt] = useState(new Date());
 
   useEffect(() => {
-    if (startDate > endDate) setEndDate(startDate);
+    if (startDate > endDate) setEndDt(startDate);
   }, [startDate, endDate]);
 
-  const onSubmit = (formData) => addJobExperience(formData);
+  // useEffect(() => {
+  //   if (edit) {
+
+  //   }
+  // }, [])
+
+  const onSubmit = (formData) => {
+    setForm();
+    if (!edit) return addJobExperience(formData);
+    if (edit) return updateJobExperience(editID, formData);
+  };
 
   return (
     <Form
       onSubmit={onSubmit}
+      initialValues={initValues}
       render={({ handleSubmit, form }) => {
+        const close = (e) => {
+          e.preventDefault();
+          setForm();
+        };
+
         return (
           <FormStyled onSubmit={handleSubmit}>
             <div className="form">
-              <h2 className="form_title">{words.stage2form.stepTwo}</h2>
+              <div className="form__header">
+                {!add && !edit && (
+                  <h2 className="form__header_title">
+                    {words.stage2form.stepTwo}
+                  </h2>
+                )}
+
+                {add && (
+                  <h2 className="form__header_title">
+                    {words.stage2form.stepTwoAdd}
+                  </h2>
+                )}
+
+                {edit && (
+                  <h2 className="form__header_title">
+                    {words.stage2form.stepTwoEdit}
+                  </h2>
+                )}
+
+                {(add || edit) && (
+                  <div className="form__header_close">
+                    <ButtonGhost
+                      icon={icons.close}
+                      iconsize={32}
+                      handler={close}
+                    />
+                  </div>
+                )}
+              </div>
 
               <div className="form__job">
                 <div className="form__job_period">
@@ -153,7 +215,7 @@ export const FormProfileTwo = ({ addJobExperience }) => {
                               {...props}
                               className="block_date"
                               locale="ru"
-                              onChange={(dt) => setStartDate(dt)}
+                              onChange={(dt) => setStartDt(dt)}
                               selected={startDate}
                               dateFormat="MM/yyyy"
                               showMonthYearPicker
@@ -179,7 +241,7 @@ export const FormProfileTwo = ({ addJobExperience }) => {
                               {...props}
                               className="block_date"
                               locale="ru"
-                              onChange={(dt) => setEndDate(dt)}
+                              onChange={(dt) => setEndDt(dt)}
                               selected={endDate}
                               dateFormat="MM/yyyy"
                               showMonthYearPicker

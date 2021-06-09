@@ -1,6 +1,9 @@
 import styled from "styled-components";
 
+import { ButtonGhost } from "../buttons/ButtonGhost";
+
 import { colors } from "../../../utils/colors";
+import { icons } from "../../../utils/icons";
 
 const BlockOneStyled = styled.div`
   display: flex;
@@ -32,12 +35,21 @@ const BlockOneStyled = styled.div`
 
   .meta {
     width: 100%;
-    padding: 32px 32px 0 0;
+    padding: 32px 0 0 0;
 
-    &_name {
+    &_header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       margin-bottom: 32px;
-      font-size: 22px;
-      font-weight: 800;
+
+      &-name {
+        font-size: 22px;
+        font-weight: 800;
+      }
+
+      &-edit {
+      }
     }
 
     &_string {
@@ -71,7 +83,7 @@ const BlockOneStyled = styled.div`
   }
 `;
 
-export const ProfileBlockOne = ({ profile }) => {
+export const ProfileBlockOne = ({ isOwner, isMobile, profile }) => {
   return (
     <BlockOneStyled>
       <div className="photo">
@@ -89,7 +101,19 @@ export const ProfileBlockOne = ({ profile }) => {
       </div>
 
       <div className="meta">
-        <h3 className="meta_name">{profile.name}</h3>
+        <div className="meta_header">
+          <h3 className="meta_header-name">{profile.name}</h3>
+
+          {isOwner && (
+            <div className="meta_header-edit">
+              <ButtonGhost
+                title={isMobile ? "" : "Редактировать"}
+                icon={icons.edit}
+                iconsize={isMobile ? 26 : 18}
+              />
+            </div>
+          )}
+        </div>
 
         <div className="meta_string">
           <h4 className="meta_string-title">Специализация:</h4>

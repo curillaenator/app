@@ -17,8 +17,8 @@ const ButtonStyled = styled.button`
   cursor: ${({ disabled }) => (disabled ? "default" : "pointer")};
 
   & > svg {
-    width: 18px;
-    height: 18px;
+    width: ${({ iconsize }) => iconsize}px;
+    height: ${({ iconsize }) => iconsize}px;
     fill: ${({ fontColor }) => fontColor};
     margin-right: ${({ title }) => (title ? "8px" : "0")};
     transition: 0.08s linear;
@@ -43,6 +43,7 @@ const ButtonStyled = styled.button`
 
 export const ButtonGhost = ({
   icon,
+  iconsize = 18,
   title,
   active = false,
   danger = false,
@@ -65,6 +66,7 @@ export const ButtonGhost = ({
 
   return (
     <ButtonStyled
+      iconsize={iconsize}
       fontColor={fontColor()}
       fontColorHov={fontColorHover()}
       title={title}

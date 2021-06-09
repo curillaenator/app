@@ -35,7 +35,14 @@ const StyledPopup = styled(Popup)`
 
 const StyledTrigger = styled.div``;
 
-export const Dropdown = ({ title, icon, items, danger }) => {
+export const Dropdown = ({
+  delID = null,
+  title,
+  icon,
+  iconsize,
+  items,
+  danger,
+}) => {
   return (
     <StyledPopup
       trigger={(open) => (
@@ -43,6 +50,7 @@ export const Dropdown = ({ title, icon, items, danger }) => {
           <ButtonGhost
             title={title}
             icon={icon}
+            iconsize={iconsize}
             active={open}
             danger={danger}
             handler={() => {}}
@@ -61,7 +69,7 @@ export const Dropdown = ({ title, icon, items, danger }) => {
             icon={item.icon}
             danger={item.danger}
             handler={() => {
-              item.handler();
+              item.handler(delID);
               close();
             }}
           />

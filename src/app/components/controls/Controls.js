@@ -5,13 +5,15 @@ import { ButtonGhost } from "../buttons/ButtonGhost";
 import { Dropdown } from "./Dropdown";
 
 import { icons } from "../../../utils/icons";
-// import { colors } from "../../../utils/colors";
+import { colors } from "../../../utils/colors";
 
 const ControlsStyled = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 8px 0 32px;
+  padding-top: 32px;
+  margin-bottom: 32px;
+  border-top: 2px solid ${colors.bgShape};
 
   @media (min-width: 768px) {
     margin: 32px 0;
@@ -32,6 +34,7 @@ export const Controls = ({ isMobile, isOwner, removeProfile }) => {
         <ButtonGhost
           title={isMobile ? "" : "Назад"}
           icon={icons.back}
+          iconsize={isMobile ? 26 : 18}
           handler={() => history.goBack()}
         />
       </div>
@@ -39,8 +42,9 @@ export const Controls = ({ isMobile, isOwner, removeProfile }) => {
       {isOwner && (
         <div className="pad">
           <Dropdown
-            title={isMobile ? "Удалить мой профиль" : "Удалить мой профиль"}
+            title={isMobile ? "Удалить профиль" : "Удалить мой профиль"}
             icon={icons.delete}
+            iconsize={isMobile ? 26 : 18}
             items={deleteItems}
             danger
           />

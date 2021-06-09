@@ -217,39 +217,88 @@ export const removeProfile = (profileID) => (dispatch, getState) => {
 };
 
 export const addJobExperience = (data) => async (dispatch, getState) => {
-  // batch(() => {
-  //   dispatch(setProgress(0));
-  // });
+  batch(() => {
+    dispatch(setProgress(0));
+  });
 
-  const profileID = getState().init.user.profileID;
-  const jobKey = await db.ref(`profiles/${profileID}/jobExperience`).push().key;
+  const profile = getState().main.profile;
+  const profID = getState().init.user.profileID;
+  const jobID = await db.ref(`profiles/${profID}/jobExp`).push().key;
 
-  const onUpdate = async (err) => {
+  const state = (updProfile) => {
+    batch(() => {
+      dispatch(setProfile(updProfile));
+      dispatch(setProgress(100));
+      dispatch(setStage2Form(false));
+    });
+  };
+
+  const onJobExpUpdate = (err) => {
     if (err) return console.log(err);
 
-    await db.ref(`profiles/${profileID}/stage`).once("value", (stage) => {
-      if (stage.val() === 1) {
-        db.ref(`profiles/${profileID}`)
-          .update({ stage: 2 })
-          .then(() => {
-            batch(() => {
-              dispatch(getProfile(profileID));
-              dispatch(setStage2Form(false));
-            });
-          });
+    db.ref(`profiles/${profID}`).once("value", (profileSnap) => {
+      dispatch(setProgress(50));
+
+      const profDB = profileSnap.val();
+
+      if (profDB.stage === 1) {
+        const profNew = { ...profile, stage: 2, jobExp: profDB.jobExp };
+        db.ref(`profiles/${profID}`).update({ stage: 2 }, () => state(profNew));
       }
 
-      if (stage.val() > 1) {
-        batch(() => {
-          dispatch(getProfile(profileID));
-          dispatch(setStage2Form(false));
-        });
+      if (profDB.stage > 1) {
+        state({ ...profile, jobExp: profDB.jobExp });
       }
     });
   };
 
-  db.ref(`profiles/${profileID}/jobExperience`).update(
-    { [jobKey]: data },
-    onUpdate
+  db.ref(`profiles/${profID}/jobExp`).update(
+    { [jobID]: { ...data, jobID } },
+    onJobExpUpdate
   );
+};
+
+export const updateJobExperience = (jobID, data) => (dispatch, getState) => {
+  batch(() => {
+    dispatch(setProgress(0));
+  });
+
+  const profile = getState().main.profile;
+  const profID = getState().init.user.profileID;
+
+  const onUpdate = (err) => {
+    if (err) return console.log(err);
+
+    const jobExp = { ...profile.jobExp, [jobID]: data };
+
+    batch(() => {
+      dispatch(setProfile({ ...profile, jobExp }));
+      dispatch(setProgress(100));
+    });
+  };
+
+  db.ref(`profiles/${profID}/jobExp/${jobID}`).update(data, onUpdate);
+};
+
+export const removeJobExperience = (jobID) => (dispatch, getState) => {
+  batch(() => {
+    dispatch(setProgress(0));
+  });
+
+  const profID = getState().init.user.profileID;
+  const profile = getState().main.profile;
+
+  const onSet = (err) => {
+    if (err) return console.log(err);
+
+    const jobExp = { ...profile.jobExp };
+    delete jobExp[jobID];
+
+    batch(() => {
+      dispatch(setProfile({ ...profile, jobExp }));
+      dispatch(setProgress(100));
+    });
+  };
+
+  db.ref(`profiles/${profID}/jobExp/${jobID}`).set(null, onSet);
 };
