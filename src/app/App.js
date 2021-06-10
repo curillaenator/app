@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { connect } from "react-redux";
 import { Switch, Route } from "react-router-dom";
+import { RemoveScroll } from "react-remove-scroll";
 import styled from "styled-components";
 import ProgressBar from "@ramonak/react-progress-bar";
 
@@ -46,6 +47,8 @@ const ArtApp = ({
   user,
   progress,
   isMobile,
+  isChat,
+  chatRooms,
   signCheck,
   signIn,
   signOut,
@@ -68,7 +71,7 @@ const ArtApp = ({
 
   useEffect(() => signCheck(), [signCheck]);
 
-  // If signed in , then get chat rooms
+  // If initialized , then get chat rooms
 
   useEffect(() => isInit && getChatRooms(), [isInit, getChatRooms, user]);
 
@@ -99,9 +102,11 @@ const ArtApp = ({
         signIn={signIn}
         signOut={signOut}
         setIsChat={setIsChat}
+        chatRooms={chatRooms}
       />
-
-      <Chat />
+      <RemoveScroll enabled={isChat}>
+        <Chat />
+      </RemoveScroll>
 
       <Switch>
         <Route exact path="/" render={() => <MainPage />} />
@@ -116,6 +121,8 @@ const mstp = (state) => ({
   user: state.init.user,
   progress: state.main.progress,
   isMobile: state.main.isMobile,
+  isChat: state.chat.isChat,
+  chatRooms: state.chat.chatRooms,
 });
 
 export const App = connect(mstp, {

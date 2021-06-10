@@ -157,4 +157,15 @@ export const icons = {
       <path d="M16 15v4l8-8.035-8-7.965v4s-13.277 2.144-16 14c5.796-6.206 16-6 16-6z" />
     </svg>
   ),
+  send: (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      fill={colors.fontLightGray}
+      viewBox="0 0 24 24"
+    >
+      <path d="M22 12l-20 12 5-12-5-12z" />
+    </svg>
+  ),
 };

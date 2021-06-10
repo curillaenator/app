@@ -1,6 +1,8 @@
 import { Form, Field } from "react-final-form";
 import styled from "styled-components";
 
+import { ButtonSend } from "../buttons/ButtonSend";
+
 import { colors } from "../../../utils/colors";
 import { words } from "../../../utils/worder";
 
@@ -19,7 +21,7 @@ const FormStyled = styled.form`
 
   .form_search {
     display: flex;
-    align-items;:center;
+    align-items: center;
 
     & > input {
       width: 100%;
@@ -35,26 +37,6 @@ const FormStyled = styled.form`
 
       &:focus::placeholder {
         opacity: 0;
-      }
-    }
-
-    &_btn {
-      flex-shrink: 0;
-      padding: 0 32px;
-      border-radius: 0 16px 16px 0;
-      background-color: ${colors.primary};
-      font-size: 14px;
-      font-weight: 700;
-      color: ${colors.fontLightGray};
-      cursor: pointer;
-      transition: 0.08s linear;
-
-      &:hover {
-        background-color: ${colors.primaryHover};
-      }
-
-      &:active {
-        background-color: ${colors.primary};
       }
     }
   }
@@ -82,7 +64,7 @@ export const SearchForm = () => {
                 placeholder={words.searchPh}
               />
 
-              <button className="form_search_btn">Найти</button>
+              <ButtonSend title="Найти" />
             </div>
           </FormStyled>
         );

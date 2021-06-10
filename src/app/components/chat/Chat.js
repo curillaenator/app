@@ -1,11 +1,19 @@
-// import { useEffect, useRef } from "react";
-// import { Form, Field } from "react-final-form";
+import { useEffect, useRef } from "react";
+import { Form, Field } from "react-final-form";
 import { connect } from "react-redux";
+import { Scrollbars } from "rc-scrollbars";
 import styled from "styled-components";
 
-import { setIsChat, handleCurRoom } from "../../../redux/reducers/chat";
+import {
+  setIsChat,
+  handleCurRoom,
+  sendMessage,
+  resetNewMsgsNote,
+} from "../../../redux/reducers/chat";
 
+import { Avatar } from "../avatar/Avatar";
 import { ButtonGhost } from "../buttons/ButtonGhost";
+import { ButtonSend } from "../buttons/ButtonSend";
 
 import { colors } from "../../../utils/colors";
 import { icons } from "../../../utils/icons";
@@ -17,7 +25,7 @@ const ChatHeader = styled.div`
   align-items: center;
   height: 80px;
   padding: 0 32px;
-  background-color: ${colors.bgWhiteOpaque};
+  background-color: ${colors.bgMediumGray};
 
   .chat_title {
     display: flex;
@@ -39,26 +47,14 @@ const ChatHeader = styled.div`
   }
 `;
 
-const ChatContacts = styled.div`
+const ChatContacts = styled(Scrollbars)`
   .contact {
     display: flex;
     align-items: center;
     height: 100px;
     padding: 0 24px;
-    border-bottom: 2px solid ${colors.bgWhiteOpaque};
     transition: 0.08s linear;
     cursor: pointer;
-
-    &_avatar {
-      will-change: filter;
-      flex-shrink: 0;
-      width: 64px;
-      height: 64px;
-      margin-right: 16px;
-      border-radius: 50%;
-      object-fit: cover;
-      filter: drop-shadow(0 12px 16px ${colors.shadow});
-    }
 
     &_username {
       width: 100%;
@@ -71,7 +67,7 @@ const ChatContacts = styled.div`
     }
 
     &:hover {
-      background-color: ${colors.bgWhiteOpaque};
+      background-color: ${colors.bgMediumGray};
     }
 
     &:active {
@@ -80,7 +76,30 @@ const ChatContacts = styled.div`
   }
 `;
 
+const ChatDialogMessage = styled.div`
+  display: flex;
+  // justify-content: center;
+  flex-shrink: 0;
+  align-items: center;
+  align-self: ${({ author }) => (author ? "flex-end" : "flex-start")};
+  width: fit-content;
+  max-width: 80%;
+  min-height: 56px;
+  margin: 8px 0;
+  padding: 16px;
+  border-radius: 16px;
+  background-color: ${({ author }) =>
+    author ? colors.primaryHover : colors.bgLightGray};
+  font-weight: 600;
+  color: ${({ author }) => (author ? colors.fontWhite : colors.fontBlack)};
+  line-height: 1.4;
+  text-align: ${({ author }) => (author ? "end" : "start")};
+`;
+
 const ChatDialog = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   position: absolute;
   top: 0;
   right: 0;
@@ -90,24 +109,15 @@ const ChatDialog = styled.div`
   transform: translateX(${({ isDialog }) => (isDialog ? "0" : "100%")});
   transition: 0.16s ease-out;
   overflow: hidden;
+  z-index: 10;
 
   .dialog_head {
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     height: 100px;
     padding: 0 24px;
-    background-color: ${colors.bgWhiteOpaque};
-
-    &-avatar {
-      will-change: filter;
-      flex-shrink: 0;
-      width: 64px;
-      height: 64px;
-      margin-right: 16px;
-      border-radius: 50%;
-      object-fit: cover;
-      filter: drop-shadow(0 12px 16px ${colors.shadow});
-    }
+    background-color: ${colors.bgMediumGray};
 
     &-username {
       width: 100%;
@@ -117,6 +127,30 @@ const ChatDialog = styled.div`
 
     &-close {
       flex-shrink: 0;
+    }
+  }
+
+  .dialog_messages {
+    display: flex;
+    flex-direction: column;
+    padding: 0 24px;
+  }
+
+  .dialog_post {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    height: 120px;
+    padding: 0 24px;
+    background-color: ${colors.bgShape};
+
+    &-input {
+      width: 100%;
+      height: 56px;
+      padding: 16px;
+      border-radius: 16px 0 0 16px;
+      background-color: ${colors.bgLightGray};
+      outline: none;
     }
   }
 `;
@@ -148,15 +182,28 @@ const ChatStyled = styled.div`
 `;
 
 const ChatConatiner = ({
+  userID,
   isMobile,
   isChat,
   chatRooms,
   curRoom,
-  curOpponent,
+  curRoomMsgs,
   setIsChat,
   handleCurRoom,
+  sendMessage,
+  resetNewMsgsNote,
 }) => {
+  const messagesRef = useRef(null);
+
+  useEffect(() => {
+    !!curRoom && messagesRef.current.scrollToBottom();
+  }, [curRoom, curRoomMsgs]);
+
   const rooms = Object.values(chatRooms);
+  const roomMsgs = Object.values(curRoomMsgs);
+  const dialogNeMsgs = !!curRoom ? chatRooms[curRoom.roomID].newMessages : 0;
+
+  const onSubmit = (messageData) => sendMessage(messageData);
 
   return (
     <ChatStyled isChat={isChat}>
@@ -175,12 +222,12 @@ const ChatConatiner = ({
 
       <div className="chatbody">
         {rooms.map((room) => (
-          <ChatContacts key={room.roomID}>
+          <ChatContacts key={room.roomID} autoHide>
             <div className="contact" onClick={() => handleCurRoom(room.roomID)}>
-              <img
-                className="contact_avatar"
-                src={room.opponent.avatar}
-                alt={room.opponent.userName}
+              <Avatar
+                imgSrc={room.opponent.avatar}
+                username={room.opponent.userName}
+                notesNum={room.newMessages}
               />
 
               <div className="contact_username">{room.opponent.userName}</div>
@@ -188,29 +235,76 @@ const ChatConatiner = ({
           </ChatContacts>
         ))}
 
-        <ChatDialog isDialog={!!curRoom}>
-          {curOpponent && (
-            <div className="dialog_head">
-              <img
-                className="dialog_head-avatar"
-                src={curOpponent.avatar}
-                alt={curOpponent.userName}
-              />
-
-              <div className="dialog_head-username">{curOpponent.userName}</div>
-
-              <div className="dialog_head-close">
-                <ButtonGhost
-                  icon={icons.close}
-                  iconsize={26}
-                  handler={() => handleCurRoom(null)}
+        <ChatDialog
+          isDialog={!!curRoom}
+          onClick={() => resetNewMsgsNote(curRoom.roomID)}
+        >
+          {!!curRoom && (
+            <>
+              <div className="dialog_head">
+                <Avatar
+                  imgSrc={curRoom.opponent.avatar}
+                  username={curRoom.opponent.userName}
+                  notesNum={dialogNeMsgs}
                 />
-              </div>
-            </div>
-          )}
 
-          <div className="dialog_messages"></div>
-          <div className="dialog_post"></div>
+                <div className="dialog_head-username">
+                  {curRoom.opponent.userName}
+                </div>
+
+                <div className="dialog_head-close">
+                  <ButtonGhost
+                    icon={icons.close}
+                    iconsize={26}
+                    handler={() => handleCurRoom(null)}
+                  />
+                </div>
+              </div>
+
+              <Scrollbars
+                ref={messagesRef}
+                autoHide
+                classes={{ view: "dialog_messages" }}
+              >
+                {roomMsgs.map((message) => (
+                  <ChatDialogMessage
+                    key={message.messageID}
+                    author={userID === message.authorID}
+                  >
+                    {message.message}
+                  </ChatDialogMessage>
+                ))}
+              </Scrollbars>
+
+              <Form
+                onSubmit={onSubmit}
+                render={({ handleSubmit, form }) => {
+                  const sendMessage = (e) => {
+                    e.preventDefault();
+                    form.submit();
+                    form.reset();
+                  };
+
+                  return (
+                    <form className="dialog_post" onSubmit={handleSubmit}>
+                      <Field
+                        name="message"
+                        component="input"
+                        className="dialog_post-input"
+                        placeholder="Напишите сообшение"
+                      />
+
+                      <ButtonSend
+                        icon={icons.send}
+                        iconsize={24}
+                        handler={sendMessage}
+                      />
+                    </form>
+                  );
+                }}
+              />
+            </>
+          )}
         </ChatDialog>
       </div>
     </ChatStyled>
@@ -218,11 +312,17 @@ const ChatConatiner = ({
 };
 
 const mstp = (state) => ({
+  userID: state.init.user.userID,
   isMobile: state.main.isMobile,
   isChat: state.chat.isChat,
   chatRooms: state.chat.chatRooms,
-  curOpponent: state.chat.curOpponent,
   curRoom: state.chat.curRoom,
+  curRoomMsgs: state.chat.curRoomMsgs,
 });
 
-export const Chat = connect(mstp, { setIsChat, handleCurRoom })(ChatConatiner);
+export const Chat = connect(mstp, {
+  setIsChat,
+  handleCurRoom,
+  sendMessage,
+  resetNewMsgsNote,
+})(ChatConatiner);
