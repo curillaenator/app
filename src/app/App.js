@@ -78,7 +78,7 @@ const ArtApp = ({
   // Handle progress bar
 
   useEffect(() => {
-    progress === 100 && setTimeout(() => setProgress(null), 1200);
+    progress === 100 && setTimeout(() => setProgress(null), 500);
   }, [progress, setProgress]);
 
   if (!isInit) return <LoaderFS />;
@@ -104,6 +104,7 @@ const ArtApp = ({
         setIsChat={setIsChat}
         chatRooms={chatRooms}
       />
+
       <RemoveScroll enabled={isChat}>
         <Chat />
       </RemoveScroll>

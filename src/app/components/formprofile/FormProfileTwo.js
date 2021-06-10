@@ -96,13 +96,15 @@ const FormStyled = styled.form`
 
     &__job {
       display: flex;
+      flex-direction: column;
       justify-content: space-between;
 
       &_period {
         flex-shrink: 0;
-        // width: 30%;
-        width: 220px;
+        width: 100%;
+        // width: 220px;
         margin-right: 48px;
+        margin-bottom: 32px;
       }
 
       &_description {
@@ -119,6 +121,17 @@ const FormStyled = styled.form`
 
   @media (min-width: 768px) {
     .form {
+      &__job {
+        flex-direction: row;
+
+        &_period {
+          width: 220px;
+          margin-bottom: 0;
+        }
+
+        &_description {
+        }
+      }
     }
 
     .form_buttons {
@@ -136,18 +149,14 @@ export const FormProfileTwo = ({
   addJobExperience = () => {},
   updateJobExperience = () => {},
 }) => {
-  const [startDate, setStartDt] = useState(new Date());
-  const [endDate, setEndDt] = useState(new Date());
+  const dater = (dateStr) => (dateStr ? new Date(dateStr) : new Date());
+
+  const [startDate, setStartDt] = useState(dater(initValues.startDate));
+  const [endDate, setEndDt] = useState(dater(initValues.endDate));
 
   useEffect(() => {
     if (startDate > endDate) setEndDt(startDate);
   }, [startDate, endDate]);
-
-  // useEffect(() => {
-  //   if (edit) {
-
-  //   }
-  // }, [])
 
   const onSubmit = (formData) => {
     setForm();
@@ -214,6 +223,7 @@ export const FormProfileTwo = ({
                             <DatePicker
                               {...props}
                               className="block_date"
+                              showPopperArrow={false}
                               locale="ru"
                               onChange={(dt) => setStartDt(dt)}
                               selected={startDate}
@@ -240,6 +250,7 @@ export const FormProfileTwo = ({
                             <DatePicker
                               {...props}
                               className="block_date"
+                              showPopperArrow={false}
                               locale="ru"
                               onChange={(dt) => setEndDt(dt)}
                               selected={endDate}
