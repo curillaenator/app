@@ -2,10 +2,11 @@ import { batch } from "react-redux";
 import { db, storage } from "../../utils/firebase";
 import { imgUploader, getAvatar, totalPeriodCalc } from "../../utils/helpers";
 
-import { setUser } from "./init";
+import { setUser, setStarred } from "./init";
 
 const SET_PROGRESS = "main/SET_PROGRESS";
 const SET_ISMOBILE = "main/SET_ISMOBILE";
+const SET_ISMOBILE1024 = "main/SET_ISMOBILE1024";
 const SET_SEARCHFORM = "main/SET_ISSEARCHFORM";
 const SET_STAGEONE = "main/SET_STAGEONE";
 const SET_STAGETWO = "main/SET_STAGETWO";
@@ -14,10 +15,13 @@ const SET_PROFILE = "main/SET_PROFILE";
 const SET_LOAD_PROFILE = "main/SET_IS_PROFILE";
 const SET_PROFLIST = "main/SET_PROFLIST";
 const SET_LOAD_PROFLIST = "main/SET_IS_PROFLIST";
+const SET_STARLIST = "main/SET_STARLIST";
+const SET_LOAD_STARLIST = "main/SET_LOAD_STARLIST";
 
 const initialState = {
   progress: null,
   isMobile: false,
+  isMobile1024: false,
   isSearchForm: false,
   isStage1Form: false,
   isStage2Form: false,
@@ -25,6 +29,8 @@ const initialState = {
   profile: null,
   loadProfileList: false,
   profileList: [],
+  loadStarredList: false,
+  starredList: [],
 };
 
 export const main = (state = initialState, action) => {
@@ -34,6 +40,9 @@ export const main = (state = initialState, action) => {
 
     case SET_ISMOBILE:
       return { ...state, isMobile: action.payload };
+
+    case SET_ISMOBILE1024:
+      return { ...state, isMobile1024: action.payload };
 
     case SET_SEARCHFORM:
       return { ...state, isSearchForm: action.payload };
@@ -58,6 +67,12 @@ export const main = (state = initialState, action) => {
     case SET_PROFLIST:
       return { ...state, profileList: action.payload };
 
+    case SET_LOAD_STARLIST:
+      return { ...state, loadStarredList: action.payload };
+
+    case SET_STARLIST:
+      return { ...state, starredList: action.payload };
+
     default:
       return state;
   }
@@ -67,6 +82,7 @@ export const main = (state = initialState, action) => {
 
 export const setProgress = (payload) => ({ type: SET_PROGRESS, payload });
 export const setMobile = (payload) => ({ type: SET_ISMOBILE, payload });
+export const setMobile1024 = (payload) => ({ type: SET_ISMOBILE1024, payload });
 export const setSearchForm = (payload) => ({ type: SET_SEARCHFORM, payload });
 export const setStage1Form = (payload) => ({ type: SET_STAGEONE, payload });
 export const setStage2Form = (payload) => ({ type: SET_STAGETWO, payload });
@@ -74,11 +90,44 @@ export const setStage2Form = (payload) => ({ type: SET_STAGETWO, payload });
 const setLoadProfile = (payload) => ({ type: SET_LOAD_PROFILE, payload });
 export const setProfile = (payload) => ({ type: SET_PROFILE, payload });
 const setLoadProfileList = (payload) => ({ type: SET_LOAD_PROFLIST, payload });
-const setProfileList = (payload) => ({ type: SET_PROFLIST, payload });
+export const setProfileList = (payload) => ({ type: SET_PROFLIST, payload });
+const setLoadStarredList = (payload) => ({ type: SET_LOAD_STARLIST, payload });
+const setStarredList = (payload) => ({ type: SET_STARLIST, payload });
 
 // THUNKS
 
-export const getProfile = (profileID) => (dispatch) => {
+export const getProfileList = () => (dispatch) => {
+  batch(() => {
+    dispatch(setProgress(0));
+    dispatch(setLoadProfileList(true));
+  });
+
+  db.ref("profiles").once("value", async (profiles) => {
+    dispatch(setProgress(40));
+
+    const dbData = profiles.exists() ? Object.values(profiles.val()) : [];
+
+    const profilesPromises = await dbData.map(async (profile) => {
+      const avatarURL = await getAvatar(profile.avatarPath);
+
+      const jobExpTotal = totalPeriodCalc(profile.jobExp);
+
+      return { ...profile, avatarURL, jobExpTotal };
+    });
+
+    const profilesFulfiled = await Promise.all(profilesPromises);
+
+    batch(() => {
+      dispatch(setProfileList(profilesFulfiled.reverse()));
+      dispatch(setLoadProfileList(false));
+      dispatch(setProgress(100));
+    });
+  });
+};
+
+// handleprofile
+
+export const getProfile = (profileID) => (dispatch, getState) => {
   if (!profileID) return dispatch(setProfile(null));
 
   batch(() => {
@@ -86,6 +135,20 @@ export const getProfile = (profileID) => (dispatch) => {
     dispatch(setProfile(null));
     dispatch(setLoadProfile(true));
   });
+
+  const profileIsLoaded = getState().main.profileList.find(
+    (profile) => profile.profileID === profileID
+  );
+
+  if (profileIsLoaded) {
+    const jobExpTotal = totalPeriodCalc(profileIsLoaded.jobExp);
+
+    return batch(() => {
+      dispatch(setProgress(100));
+      dispatch(setProfile({ ...profileIsLoaded, jobExpTotal }));
+      dispatch(setLoadProfile(false));
+    });
+  }
 
   db.ref(`profiles/${profileID}`).once("value", (profile) => {
     dispatch(setProgress(40));
@@ -107,35 +170,6 @@ export const getProfile = (profileID) => (dispatch) => {
           dispatch(setLoadProfile(false));
         });
       });
-  });
-};
-
-export const getProfileList = () => (dispatch) => {
-  batch(() => {
-    dispatch(setProgress(0));
-    dispatch(setLoadProfileList(true));
-  });
-
-  db.ref("profiles").once("value", async (profiles) => {
-    dispatch(setProgress(40));
-
-    const dbData = profiles.exists() ? Object.values(profiles.val()) : [];
-
-    const prifilesPromises = await dbData.map(async (profile) => {
-      const avatarURL = await getAvatar(profile.avatarPath);
-
-      const jobExpTotal = totalPeriodCalc(profile.jobExp);
-
-      return { ...profile, avatarURL, jobExpTotal };
-    });
-
-    const profilesFulfiled = await Promise.all(prifilesPromises);
-
-    batch(() => {
-      dispatch(setProfileList(profilesFulfiled.reverse()));
-      dispatch(setLoadProfileList(false));
-      dispatch(setProgress(100));
-    });
   });
 };
 
@@ -252,6 +286,8 @@ export const removeProfile = (profileID) => (dispatch, getState) => {
   db.ref().child(`profiles/${profileID}`).set(null, onSet);
 };
 
+// handle job experience
+
 export const addJobExperience = (data) => async (dispatch, getState) => {
   batch(() => {
     dispatch(setProgress(0));
@@ -337,4 +373,86 @@ export const removeJobExperience = (jobID) => (dispatch, getState) => {
   };
 
   db.ref(`profiles/${profID}/jobExp/${jobID}`).set(null, onSet);
+};
+
+// handle starred
+
+export const getStarredList = () => async (dispatch, getState) => {
+  batch(() => {
+    dispatch(setProgress(0));
+    dispatch(setLoadStarredList(true));
+  });
+
+  const starred = Object.keys(getState().init.user.starred || {});
+
+  const starredPromisesNoAva = starred.map((profileID) =>
+    db.ref(`profiles/${profileID}`).once("value")
+  );
+
+  const starredSnaps = await Promise.all(starredPromisesNoAva)
+    .then((snaps) => snaps.map((sn) => sn.val()))
+    .catch((err) => console.log(err));
+
+  if (starredSnaps.length > 0) {
+    const starredPromises = await starredSnaps.map(async (profile) => {
+      const avatarURL = await getAvatar(profile.avatarPath);
+
+      const jobExpTotal = totalPeriodCalc(profile.jobExp);
+
+      return { ...profile, avatarURL, jobExpTotal };
+    });
+
+    dispatch(setProgress(75));
+
+    const profilesFulfiled = await Promise.all(starredPromises);
+
+    batch(() => {
+      dispatch(setStarredList(profilesFulfiled.reverse()));
+      dispatch(setLoadStarredList(false));
+      dispatch(setProgress(100));
+    });
+  }
+
+  if (starredSnaps.length === 0) {
+    batch(() => {
+      dispatch(setStarredList([]));
+      dispatch(setLoadStarredList(false));
+      dispatch(setProgress(100));
+    });
+  }
+
+  console.log(starredSnaps);
+};
+
+export const handleStarred = (profileID) => (dispatch, getState) => {
+  const user = getState().init.user;
+  const starred = user.starred;
+
+  const checkStarred = starred ? profileID in starred : null;
+
+  if (!checkStarred) {
+    const onUpdate = (err) => {
+      if (err) return console.log(err);
+
+      dispatch(setStarred({ ...starred, [profileID]: profileID }));
+    };
+
+    return db
+      .ref(`users/${user.userID}/starred`)
+      .update({ [profileID]: profileID }, onUpdate);
+  }
+
+  if (checkStarred) {
+    const onUpdate = (err) => {
+      if (err) return console.log(err);
+
+      delete starred[profileID];
+
+      dispatch(setStarred({ ...starred }));
+    };
+
+    return db
+      .ref(`users/${user.userID}/starred`)
+      .update({ [profileID]: null }, onUpdate);
+  }
 };

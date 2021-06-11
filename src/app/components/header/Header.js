@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { useHistory, useLocation } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import Popup from "reactjs-popup";
@@ -86,7 +85,7 @@ const UserStyled = styled.div`
   }
 `;
 
-const LogoStyled = styled(Link)`
+const LogoStyled = styled.div`
   display: flex;
   align-items: center;
   text-decoration: none;
@@ -148,6 +147,7 @@ export const Header = ({
   chatRooms,
   signIn,
   signOut,
+  setProfileList,
   setIsChat,
 }) => {
   const history = useHistory();
@@ -160,14 +160,19 @@ export const Header = ({
 
   return (
     <HeaderStyled>
-      <LogoStyled to="/">
+      <LogoStyled
+        onClick={() => {
+          history.push("/");
+          setProfileList([]);
+        }}
+      >
         <img className="image" src={logo} alt="Logo" />
         <div className="text">{words.logoTitle}</div>
       </LogoStyled>
 
       {!user.userID && (
         <div className="buttons">
-          <ButtonGhost title="Вход" handler={signIn} />
+          <ButtonGhost title="Вход" handler={signIn} fontsize={16} />
         </div>
       )}
 
@@ -215,6 +220,15 @@ export const Header = ({
 
                   <div className="note_container-notification">*</div>
                 </div>
+
+                <ButtonGhost
+                  title="Избранное"
+                  icon={icons.star}
+                  handler={() => {
+                    history.push("/starred");
+                    close();
+                  }}
+                />
 
                 <ButtonGhost
                   title="Выйти"

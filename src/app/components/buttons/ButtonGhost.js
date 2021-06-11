@@ -9,7 +9,7 @@ const ButtonStyled = styled.button`
   width: fit-content;
   height: 40px;
   padding: 0 16px;
-  font-size: 14px;
+  font-size: ${({ fontsize }) => fontsize}px;
   font-weight: 700;
   transition: 0.08s linear;
   will-change: filter;
@@ -42,9 +42,10 @@ const ButtonStyled = styled.button`
 `;
 
 export const ButtonGhost = ({
-  icon,
+  icon = null,
   iconsize = 18,
-  title,
+  title = "",
+  fontsize = 14,
   active = false,
   danger = false,
   disabled = false,
@@ -70,6 +71,7 @@ export const ButtonGhost = ({
       fontColor={fontColor()}
       fontColorHov={fontColorHover()}
       title={title}
+      fontsize={fontsize}
       disabled={disabled}
       onClick={handler}
     >

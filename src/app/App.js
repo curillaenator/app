@@ -6,12 +6,18 @@ import styled from "styled-components";
 import ProgressBar from "@ramonak/react-progress-bar";
 
 import { signCheck, signIn, signOut } from "../redux/reducers/init";
-import { setMobile, setProgress } from "../redux/reducers/main";
 import { setIsChat, getChatRooms } from "../redux/reducers/chat";
+import {
+  setMobile,
+  setMobile1024,
+  setProgress,
+  setProfileList,
+} from "../redux/reducers/main";
 
 import { LoaderFS } from "./components/loader/LoaderFS";
 import { MainPage } from "./pages/MainPage";
 import { ProfilePage } from "./pages/ProfilePage";
+import { StarredPage } from "./pages/StarredPage";
 import { Header } from "./components/header/Header";
 import { Chat } from "./components/chat/Chat";
 
@@ -54,6 +60,8 @@ const ArtApp = ({
   signOut,
   setProgress,
   setMobile,
+  setMobile1024,
+  setProfileList,
   setIsChat,
   getChatRooms,
 }) => {
@@ -62,10 +70,11 @@ const ArtApp = ({
   useEffect(() => {
     const watchResize = () => {
       window.innerWidth < 768 ? setMobile(true) : setMobile(false);
+      window.innerWidth < 1024 ? setMobile1024(true) : setMobile1024(false);
     };
 
     window.addEventListener("resize", watchResize);
-  }, [setMobile]);
+  }, [setMobile, setMobile1024]);
 
   // Check if signed in or not
 
@@ -103,6 +112,7 @@ const ArtApp = ({
         signOut={signOut}
         setIsChat={setIsChat}
         chatRooms={chatRooms}
+        setProfileList={setProfileList}
       />
 
       <RemoveScroll enabled={isChat}>
@@ -111,6 +121,7 @@ const ArtApp = ({
 
       <Switch>
         <Route exact path="/" render={() => <MainPage />} />
+        <Route path="/starred" render={() => <StarredPage />} />
         <Route path="/profile/:id?" render={() => <ProfilePage />} />
       </Switch>
     </Container>
@@ -128,10 +139,12 @@ const mstp = (state) => ({
 
 export const App = connect(mstp, {
   setMobile,
+  setMobile1024,
   setProgress,
   signCheck,
   signIn,
   signOut,
+  setProfileList,
   setIsChat,
   getChatRooms,
 })(ArtApp);

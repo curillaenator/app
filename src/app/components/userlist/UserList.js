@@ -8,11 +8,24 @@ const ListStyled = styled.section`
   justify-content: space-between;
 `;
 
-export const UserList = ({ profileList }) => {
+export const UserList = ({
+  isMobile,
+  userID,
+  profileList,
+  starred,
+  handleStarred,
+}) => {
   return (
     <ListStyled>
       {profileList.map((profile) => (
-        <UserCard profile={profile} key={profile.profileID} />
+        <UserCard
+          userID={userID}
+          profile={profile}
+          starred={starred}
+          key={profile.profileID}
+          isMobile={isMobile}
+          handleStarred={handleStarred}
+        />
       ))}
     </ListStyled>
   );

@@ -7,9 +7,8 @@ const AvatarStyled = styled.div`
   flex-shrink: 0;
   width: ${({ size }) => size}px;
   height: ${({ size }) => size}px;
-  margin-right: 16px;
-  will-change: filter;
-  filter: drop-shadow(0 12px 12px ${colors.shadow});
+  // will-change: filter;
+  // filter: drop-shadow(0 12px 12px ${colors.shadow});
 
   .image {
     width: 100%;

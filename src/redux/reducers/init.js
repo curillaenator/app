@@ -5,6 +5,7 @@ import { chatOnSignOut } from "./chat";
 
 const SET_IS_INIT = "init/SET_IS_INIT";
 const SET_USER = "init/SET_USER";
+const SET_STARRED = "main/SET_STARRED";
 
 const initialState = {
   isInit: false,
@@ -19,6 +20,9 @@ export const init = (state = initialState, action) => {
     case SET_USER:
       return { ...state, user: action.payload };
 
+    case SET_STARRED:
+      return { ...state, user: { ...state.user, starred: action.payload } };
+
     default:
       return state;
   }
@@ -28,6 +32,7 @@ export const init = (state = initialState, action) => {
 
 const setInit = (payload) => ({ type: SET_IS_INIT, payload });
 export const setUser = (payload) => ({ type: SET_USER, payload });
+export const setStarred = (payload) => ({ type: SET_STARRED, payload });
 
 // THUNKS
 

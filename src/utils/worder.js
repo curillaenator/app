@@ -20,6 +20,14 @@ export const words = {
       </span>
     </span>
   ),
+  starredTitle: (
+    <span>
+      Ваш список{" "}
+      <span style={{ color: colors.primary }}>
+        <br /> избранных
+      </span>
+    </span>
+  ),
   searchBtn: {
     idle: "Искать специалиста",
     active: "Скрыть поиск",
@@ -41,8 +49,7 @@ export const words = {
     ),
     stepOneEdit: (
       <span>
-        Отредактируйте{" "}
-        <span style={{ color: colors.fontTitle }}>данные</span>
+        Отредактируйте <span style={{ color: colors.fontTitle }}>данные</span>
       </span>
     ),
     name: (
@@ -65,7 +72,8 @@ export const words = {
     jobPh: "...Frontend разработчик, Laravel бэкенд",
     languages: (
       <span>
-        <span style={{ color: colors.fontTitle }}>Языки</span>, которыми владеете:
+        <span style={{ color: colors.fontTitle }}>Языки</span>, которыми
+        владеете:
       </span>
     ),
     languagesPh: "...Английский(технический), Монгольский(свободно)...",
