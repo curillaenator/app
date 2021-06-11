@@ -26,17 +26,15 @@ body {
 input,
 textarea {
   font-weight: 700;
-  font-size: 14px;
+  font-size: 16px;
+  color: #303841;
 }
 
-input::placeholder {
-  font-weight: 600;
-  font-size: 14px;
-}
-
+input::placeholder,
 textarea::placeholder {
   font-weight: 600;
-  font-size: 14px;
+  font-size: 16px;
+  color: #acacac;
 }
 
 button {
@@ -44,6 +42,5 @@ button {
 }
 
 .temptemp {
-  background-color: #ffffff75;
-  text-align: start;
+  background-color: #dddddd;
 }

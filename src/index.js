@@ -6,6 +6,7 @@ import { App } from "./app/App";
 import { store } from "./redux/store";
 
 import "react-datepicker/dist/react-datepicker.css";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import "./index.css";
 
 ReactDOM.render(

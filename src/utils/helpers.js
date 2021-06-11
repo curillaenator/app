@@ -61,16 +61,16 @@ class Periods {
         return ``;
 
       case num > 10 && num < 20:
-        return `${num} ${dict.f5t10}`;
+        return `${num} ${dict.f5t10} `;
 
       case num % 10 === 1:
-        return `${num} ${dict.f1t1}`;
+        return `${num} ${dict.f1t1} `;
 
       case num % 10 > 1 && num % 10 < 5:
-        return `${num} ${dict.f2t4}`;
+        return `${num} ${dict.f2t4} `;
 
       default:
-        return `${num} ${dict.f5t10}`;
+        return `${num} ${dict.f5t10} `;
     }
   }
 
@@ -81,13 +81,11 @@ class Periods {
     return new Date(dateStr).toLocaleString("ru", options);
   }
 
-  jobRangeWorder(start, end) {
-    const diff = new Date(end - start);
+  jobRangeWorder(dateMs) {
+    const months = dateMs.getMonth();
+    const years = dateMs.getFullYear() - 1970;
 
-    const months = diff.getMonth();
-    const years = diff.getFullYear() - 1970;
-
-    return `${this.numToWord(years, this.yearsDict)} ${this.numToWord(
+    return `${this.numToWord(years, this.yearsDict)}${this.numToWord(
       months,
       this.monthsDict
     )}`;
@@ -103,8 +101,25 @@ export const periodCalc = (startDate, endDate) => {
     <span>
       {`${periods.dateToMMYYYY(startDate)} — ${periods.dateToMMYYYY(endDate)} `}
       <span style={{ color: colors.fontTitle }}>
-        {periods.jobRangeWorder(start, end)}
+        {periods.jobRangeWorder(new Date(end - start))}
       </span>
     </span>
   );
+};
+
+export const totalPeriodCalc = (jobExp) => {
+  if (!jobExp) return "Не указан";
+
+  const periods = new Periods();
+
+  const jobExpTotalMs = Object.values(jobExp).reduce((sum, pfile) => {
+    const start = new Date(pfile.startDate);
+    const end = pfile.endDate ? new Date(pfile.endDate) : new Date();
+
+    const diff = +end - start;
+
+    return sum + diff;
+  }, 0);
+
+  return `${periods.jobRangeWorder(new Date(jobExpTotalMs))}`;
 };

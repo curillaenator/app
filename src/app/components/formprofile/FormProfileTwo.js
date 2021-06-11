@@ -25,7 +25,7 @@ const DescriptionBlock = styled.div`
   }
 
   .block_title {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 700;
     margin-bottom: 16px;
     color: ${colors.primary};
@@ -40,7 +40,7 @@ const PeriodBlock = styled.div`
   }
 
   .block_title {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 700;
     margin-bottom: 16px;
     color: ${colors.primary};
@@ -89,7 +89,7 @@ const FormStyled = styled.form`
       aling-items: center;
 
       &_title {
-        font-size: 32px;
+        font-size: 24px;
         font-weight: 700;
         margin-bottom: 32px;
         color: ${colors.primary};

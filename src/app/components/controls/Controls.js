@@ -11,9 +11,9 @@ const ControlsStyled = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 32px;
+  // padding-top: 32px;
   margin-bottom: 32px;
-  border-top: 2px solid ${colors.bgShape};
+  // border-top: 2px solid ${colors.bgShape};
 
   @media (min-width: 768px) {
     margin: 32px 0;

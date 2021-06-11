@@ -1,6 +1,6 @@
 import { batch } from "react-redux";
 import { db, storage } from "../../utils/firebase";
-import { imgUploader, getAvatar } from "../../utils/helpers";
+import { imgUploader, getAvatar, totalPeriodCalc } from "../../utils/helpers";
 
 import { setUser } from "./init";
 
@@ -91,6 +91,8 @@ export const getProfile = (profileID) => (dispatch) => {
     dispatch(setProgress(40));
     const data = profile.val();
 
+    const jobExpTotal = totalPeriodCalc(data.jobExp);
+
     const promise = storage
       .ref(data.avatarPath)
       .listAll()
@@ -101,7 +103,7 @@ export const getProfile = (profileID) => (dispatch) => {
       .then((urls) => {
         batch(() => {
           dispatch(setProgress(100));
-          dispatch(setProfile({ ...data, avatarURL: urls[0] }));
+          dispatch(setProfile({ ...data, avatarURL: urls[0], jobExpTotal }));
           dispatch(setLoadProfile(false));
         });
       });
@@ -119,15 +121,18 @@ export const getProfileList = () => (dispatch) => {
 
     const dbData = profiles.exists() ? Object.values(profiles.val()) : [];
 
-    const urlPromise = await dbData.map(async (profile) => {
+    const prifilesPromises = await dbData.map(async (profile) => {
       const avatarURL = await getAvatar(profile.avatarPath);
-      return { ...profile, avatarURL };
+
+      const jobExpTotal = totalPeriodCalc(profile.jobExp);
+
+      return { ...profile, avatarURL, jobExpTotal };
     });
 
-    const fulfiled = await Promise.all(urlPromise);
+    const profilesFulfiled = await Promise.all(prifilesPromises);
 
     batch(() => {
-      dispatch(setProfileList(fulfiled));
+      dispatch(setProfileList(profilesFulfiled.reverse()));
       dispatch(setLoadProfileList(false));
       dispatch(setProgress(100));
     });

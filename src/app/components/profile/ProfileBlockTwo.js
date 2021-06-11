@@ -13,10 +13,9 @@ import { icons } from "../../../utils/icons";
 const JobStyled = styled.div`
   display: ${({ hide }) => (hide ? "none" : "block")};
   margin-bottom: 32px;
-  padding: 24px 0;
-  border: 2px solid ${colors.bgShape};
-  border-left: none;
-  border-right: none;
+  padding: 24px;
+  border-radius: 16px;
+  background-color: ${colors.bgWhite};
 
   .job__header {
     display: flex;
@@ -64,6 +63,28 @@ const JobStyled = styled.div`
           font-size: 16px;
           font-weight: 600;
         }
+
+        &-databold {
+          font-size: 16px;
+          font-weight: 800;
+        }
+
+        &-url {
+          width: fit-content;
+          font-size: 16px;
+          font-weight: 800;
+          color: ${colors.fontLink};
+          cursor: pointer;
+          transition: 0.08s linear;
+
+          &:hover {
+            color: ${colors.primaryHover2};
+          }
+
+          &:active {
+            color: ${colors.fontLink};
+          }
+        }
       }
     }
   }
@@ -86,11 +107,14 @@ const JobStyled = styled.div`
 const BlockTwoStyled = styled.div`
   margin-bottom: 56px;
 
-  //   .block_title {
-  //     margin-bottom: 32px;
-  //     font-size: 22px;
-  //     font-weight: 800;
-  //   }
+  .blockTwo_label {
+    margin-bottom: 32px;
+    padding: 0 24px;
+    font-size: 24px;
+    font-weight: 800;
+    color: ${colors.fontTitle};
+    user-select: none;
+  }
 
   .job_container {
   }
@@ -124,7 +148,7 @@ export const ProfileBlockTwo = ({
 
   return (
     <BlockTwoStyled>
-      {/* <div className="block_title">Опыт работы:</div> */}
+      <div className="blockTwo_label">Опыт работы:</div>
 
       {jobs.map((job) => (
         <div className="job_container" key={job.jobID}>
@@ -165,27 +189,32 @@ export const ProfileBlockTwo = ({
             <div className="job_description">
               <div className="block left">
                 <div className="block_string">
-                  <h4 className="block_string-title">Деятельность компании:</h4>
-                  <div className="block_string-data">{job.companyActivity}</div>
+                  <h4 className="block_string-title">Сайт компании:</h4>
+                  <div
+                    className="block_string-url"
+                    onClick={() => window.open(job.companySite, "_blank")}
+                  >
+                    {job.companySite}
+                  </div>
                 </div>
 
                 <div className="block_string">
-                  <h4 className="block_string-title">Сайт компании:</h4>
-                  <div className="block_string-data">{job.companySite}</div>
+                  <h4 className="block_string-title">Деятельность компании:</h4>
+                  <div className="block_string-data">{job.companyActivity}</div>
                 </div>
               </div>
 
               <div className="block right">
                 <div className="block_string">
+                  <h4 className="block_string-title">Должность:</h4>
+                  <div className="block_string-databold">{job.position}</div>
+                </div>
+
+                <div className="block_string">
                   <h4 className="block_string-title">Период:</h4>
                   <div className="block_string-data">
                     {periodCalc(job.startDate, job.endDate)}
                   </div>
-                </div>
-
-                <div className="block_string">
-                  <h4 className="block_string-title">Должность:</h4>
-                  <div className="block_string-data">{job.position}</div>
                 </div>
 
                 <div className="block_string">

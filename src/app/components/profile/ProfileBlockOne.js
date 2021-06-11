@@ -1,4 +1,5 @@
 import { useState } from "react";
+import parse from "html-react-parser";
 import styled from "styled-components";
 
 import { ButtonGhost } from "../buttons/ButtonGhost";
@@ -19,6 +20,7 @@ const BlockOneStyled = styled.div`
       flex-shrink: 0;
       width: 100%;
       height: 0;
+      margin-bottom: 32px;
       padding-top: 150%;
 
       &_main {
@@ -38,7 +40,9 @@ const BlockOneStyled = styled.div`
 
     .meta {
       width: 100%;
-      padding: 32px 0 0 0;
+      padding: 24px;
+      border-radius: 16px;
+      background-color: ${colors.bgWhite};
 
       &_header {
         display: flex;
@@ -69,6 +73,11 @@ const BlockOneStyled = styled.div`
           font-size: 16px;
           font-weight: 600;
         }
+
+        &-databold {
+          font-size: 16px;
+          font-weight: 800;
+        }
       }
     }
   }
@@ -80,16 +89,22 @@ const BlockOneStyled = styled.div`
       .photo {
         width: 30%;
         padding-top: 45%;
+        margin-bottom: 0;
       }
 
       .meta {
-        width: calc(70% - 64px);
+        width: calc(70% - 48px);
       }
     }
   }
 `;
 
-export const ProfileBlockOne = ({ isOwner, isMobile, profile, editProfile }) => {
+export const ProfileBlockOne = ({
+  isOwner,
+  isMobile,
+  profile,
+  editProfile,
+}) => {
   const [editForm, setEditForm] = useState(false);
 
   return (
@@ -137,19 +152,33 @@ export const ProfileBlockOne = ({ isOwner, isMobile, profile, editProfile }) => 
 
             <div className="meta_string">
               <h4 className="meta_string-title">Специализация:</h4>
-              <div className="meta_string-data">{profile.job}</div>
+              <div className="meta_string-databold">{profile.job}</div>
             </div>
 
             <div className="meta_string">
-              <h4 className="meta_string-title">IT скиллс:</h4>
-              <div className="meta_string-data">{profile.skills}</div>
+              <h4 className="meta_string-title">Город:</h4>
+              <div className="meta_string-data">{profile.city}</div>
             </div>
 
-            <div className="meta_string">
-              <h4 className="meta_string-title">Стаж работы:</h4>
-              <div className="meta_string-data">
-                {profile.fullperiod ? profile.fullperiod : "не указан"}
+            {!isOwner && (
+              <div className="meta_string">
+                <h4 className="meta_string-title">Стаж работы:</h4>
+                <div className="meta_string-data">{profile.jobExpTotal}</div>
               </div>
+            )}
+
+            {profile.skillsHTML && (
+              <div className="meta_string">
+                <h4 className="meta_string-title">IT скиллс:</h4>
+                <div className="meta_string-data">
+                  {parse(profile.skillsHTML)}
+                </div>
+              </div>
+            )}
+
+            <div className="meta_string">
+              <h4 className="meta_string-title">Говорю на языках:</h4>
+              <div className="meta_string-data">{profile.languages}</div>
             </div>
           </div>
         </div>

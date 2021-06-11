@@ -42,7 +42,7 @@ export const words = {
     stepOneEdit: (
       <span>
         Отредактируйте{" "}
-        <span style={{ color: colors.fontTitle }}>ваши данные</span>
+        <span style={{ color: colors.fontTitle }}>данные</span>
       </span>
     ),
     name: (
@@ -51,18 +51,30 @@ export const words = {
       </span>
     ),
     namePh: "...к примеру, Батырбек?",
+    city: (
+      <span>
+        Ваш <span style={{ color: colors.fontTitle }}>город</span>:
+      </span>
+    ),
+    cityPh: "...откуда Вы?",
     job: (
       <span>
         Вашу <span style={{ color: colors.fontTitle }}>специализацию</span>:
       </span>
     ),
     jobPh: "...Frontend разработчик, Laravel бэкенд",
+    languages: (
+      <span>
+        <span style={{ color: colors.fontTitle }}>Языки</span>, которыми владеете:
+      </span>
+    ),
+    languagesPh: "...Английский(технический), Монгольский(свободно)...",
     skills: (
       <span>
         Ваши <span style={{ color: colors.fontTitle }}>IT скиллс</span>:
       </span>
     ),
-    skillsPh: "...опишите владеемые вами технологии и что на них писали",
+    skillsPh: "...языки программирования, технологии и что на них писали",
     photo: (
       <span>
         Ваше лучшее <span style={{ color: colors.fontTitle }}>фото</span>:
