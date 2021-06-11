@@ -7,6 +7,7 @@ import ru from "date-fns/locale/ru";
 
 import { TextInput } from "../inputs/Textinput";
 import { Textarea } from "../inputs/Textarea";
+import { Checkbox } from "../inputs/Checkbox";
 import { Button } from "../buttons/Button";
 import { ButtonGhost } from "../buttons/ButtonGhost";
 
@@ -45,13 +46,17 @@ const PeriodBlock = styled.div`
     color: ${colors.primary};
   }
 
+  .block_checkbox {
+    margin-bottom: 16px;
+  }
+
   .block_date {
     width: 100%;
     height: 100%;
     padding: 0 16px;
     font-size: 16px;
     font-weight: 700;
-    margin-bottom: 16px;
+    // margin-bottom: 16px;
     border-radius: 16px;
     background-color: ${colors.bgLightGray};
     color: ${colors.primary};
@@ -102,13 +107,10 @@ const FormStyled = styled.form`
       &_period {
         flex-shrink: 0;
         width: 100%;
-        // width: 220px;
-        margin-right: 48px;
         margin-bottom: 32px;
       }
 
       &_description {
-        // width: calc(70% - 48px);
         width: 100%;
       }
     }
@@ -126,6 +128,7 @@ const FormStyled = styled.form`
 
         &_period {
           width: 220px;
+          margin-right: 48px;
           margin-bottom: 0;
         }
 
@@ -153,12 +156,16 @@ export const FormProfileTwo = ({
 
   const [startDate, setStartDt] = useState(dater(initValues.startDate));
   const [endDate, setEndDt] = useState(dater(initValues.endDate));
+  const [noEndDate, setNoEndDate] = useState(false);
 
   useEffect(() => {
     if (startDate > endDate) setEndDt(startDate);
-  }, [startDate, endDate]);
+    if (initValues.noEndDate !== undefined) setNoEndDate(initValues.noEndDate);
+  }, [startDate, endDate, initValues.noEndDate]);
 
   const onSubmit = (formData) => {
+    if (formData.noEndDate) formData.endDate = false;
+
     setForm();
     if (!edit) return addJobExperience(formData);
     if (edit) return updateJobExperience(editID, formData);
@@ -241,28 +248,42 @@ export const FormProfileTwo = ({
                   <PeriodBlock>
                     <h2 className="block_title">{words.stage2form.workEnd}</h2>
 
-                    <Field
-                      name="endDate"
-                      render={({ input, meta, ...props }) => {
-                        input.onChange(endDate);
-                        return (
-                          <div>
-                            <DatePicker
-                              {...props}
-                              className="block_date"
-                              showPopperArrow={false}
-                              locale="ru"
-                              onChange={(dt) => setEndDt(dt)}
-                              selected={endDate}
-                              dateFormat="MM/yyyy"
-                              showMonthYearPicker
-                              showFullMonthYearPicker
-                              maxDate={new Date()}
-                            />
-                          </div>
-                        );
-                      }}
-                    />
+                    <div className="block_checkbox">
+                      <Field
+                        name="noEndDate"
+                        component={Checkbox}
+                        type="checkbox"
+                        id="noEndDatePeriod"
+                        title="По текущее время"
+                        checked={noEndDate}
+                        setActive={setNoEndDate}
+                      />
+                    </div>
+
+                    {!noEndDate && (
+                      <Field
+                        name="endDate"
+                        render={({ input, meta, ...props }) => {
+                          input.onChange(endDate);
+                          return (
+                            <div>
+                              <DatePicker
+                                {...props}
+                                className="block_date"
+                                showPopperArrow={false}
+                                locale="ru"
+                                onChange={(dt) => setEndDt(dt)}
+                                selected={endDate}
+                                dateFormat="MM/yyyy"
+                                showMonthYearPicker
+                                showFullMonthYearPicker
+                                maxDate={new Date()}
+                              />
+                            </div>
+                          );
+                        }}
+                      />
+                    )}
                   </PeriodBlock>
                 </div>
 

@@ -5,6 +5,8 @@ import { ButtonGhost } from "../buttons/ButtonGhost";
 import { Dropdown } from "../controls/Dropdown";
 import { FormProfileTwo } from "../formprofile/FormProfileTwo";
 
+import { periodCalc } from "../../../utils/helpers";
+
 import { colors } from "../../../utils/colors";
 import { icons } from "../../../utils/icons";
 
@@ -119,66 +121,6 @@ export const ProfileBlockTwo = ({
     },
     { title: "Отмена", icon: icons.back, handler: () => {} },
   ];
-
-  const periodCalc = (start, endDate) => {
-    const options = { year: "numeric", month: "long" };
-    const end = endDate || new Date();
-
-    const dater = (dateStr) => {
-      if (!dateStr) return "текущее время";
-      return new Date(dateStr).toLocaleString("ru", options);
-    };
-
-    const periodWorder = () => {
-      const diff = new Date(new Date(end) - new Date(start));
-
-      const yearsDict = {
-        f1t1: "год",
-        f2t4: "года",
-        f5t10: "лет",
-      };
-
-      const monthsDict = {
-        f1t1: "месяц",
-        f2t4: "месяца",
-        f5t10: "месяцев",
-      };
-
-      const dateWorder = (num, dict) => {
-        switch (true) {
-          case num === 0:
-            return ``;
-
-          case num > 10 && num < 20:
-            return `${num} ${dict.f5t10}`;
-
-          case num % 10 === 1:
-            return `${num} ${dict.f1t1}`;
-
-          case num % 10 > 1 && num % 10 < 5:
-            return `${num} ${dict.f2t4}`;
-
-          default:
-            return `${num} ${dict.f5t10}`;
-        }
-      };
-
-      const months = diff.getMonth();
-      const years = diff.getFullYear() - 1970;
-
-      return `${dateWorder(years, yearsDict)} ${dateWorder(
-        months,
-        monthsDict
-      )}`;
-    };
-
-    return (
-      <span>
-        {`${dater(start)} — ${dater(endDate)} `}
-        <span style={{ color: colors.fontTitle }}>{periodWorder()}</span>
-      </span>
-    );
-  };
 
   return (
     <BlockTwoStyled>

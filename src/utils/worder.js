@@ -3,20 +3,20 @@ import { colors } from "./colors";
 export const words = {
   logoTitle: (
     <span>
-      <span style={{ color: colors.fontTitle }}>IT</span>Profiler
+      <span style={{ color: colors.fontTitle }}>Pro</span>Filer
     </span>
   ),
   mainTitle: (
     <span>
       <span style={{ color: colors.primary }}> Найдите лучших </span> <br />
-      IT специалистов
+      специалистов
     </span>
   ),
   profileTitle: (
     <span>
       Создайте свой{" "}
       <span style={{ color: colors.primary }}>
-        <br /> IT профайл
+        <br /> профайл
       </span>
     </span>
   ),
@@ -41,7 +41,7 @@ export const words = {
     ),
     stepOneEdit: (
       <span>
-        Редактируйте{" "}
+        Отредактируйте{" "}
         <span style={{ color: colors.fontTitle }}>ваши данные</span>
       </span>
     ),
