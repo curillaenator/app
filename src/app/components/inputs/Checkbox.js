@@ -50,7 +50,6 @@ const InputStyled = styled.div`
 `;
 
 export const Checkbox = ({ input, meta, id, title, setActive }) => {
-  console.log(meta);
   return (
     <InputStyled>
       <div className="checkbox">

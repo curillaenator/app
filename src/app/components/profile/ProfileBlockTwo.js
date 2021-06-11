@@ -110,7 +110,7 @@ export const ProfileBlockTwo = ({
   const [addForm, setAddForm] = useState(false);
   const [editForm, setEditForm] = useState(null);
 
-  const jobs = Object.values(profile.jobExp || {});
+  const jobs = Object.values(profile.jobExp || {}).reverse();
 
   const deleteJob = [
     {
