@@ -9,6 +9,8 @@ const InputStyled = styled.div`
     min-height: 56px;
     padding: 16px;
     border-radius: 16px;
+    border: ${({ error }) =>
+      error ? `1px solid ${colors.fontDanger}` : "none"};
     background-color: ${colors.bgLightGray};
     color: ${colors.primary};
     line-height: 24px;
@@ -24,13 +26,22 @@ const InputStyled = styled.div`
       opacity: 0;
     }
   }
+
+  .subtitle {
+    width: 100%;
+    min-height: 14px;
+    margin-left: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: ${({ error }) => (error ? colors.fontDanger : colors.fontPrimary)};
+  }
 `;
 
 export const Textarea = ({ input, meta, minRows = 5, ...props }) => {
   const error = meta.touched && meta.error;
 
   return (
-    <InputStyled>
+    <InputStyled error={error}>
       <TextareaAutosize
         {...input}
         {...props}
@@ -38,8 +49,7 @@ export const Textarea = ({ input, meta, minRows = 5, ...props }) => {
         onChange={input.onChange}
         className="textarea"
       />
-      {!error && <p className="sub">{props.sub}</p>}
-      {error && <p className="sub sub_error">{meta.error}</p>}
+      <div className="subtitle">{meta.error}</div>
     </InputStyled>
   );
 };

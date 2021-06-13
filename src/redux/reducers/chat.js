@@ -178,7 +178,7 @@ export const sendMessage = (message) => (dispatch, getState) => {
   db.ref(`chatmsgs/${roomID}/${messageID}`).update(newMsg, onUpdate);
 };
 
-export const chatOnSignOut = () => (dispatch, getState) => {
+export const resetChatState = () => (dispatch, getState) => {
   const userID = getState().init.user.userID;
   db.ref(`chatrooms/${userID}`).off();
 

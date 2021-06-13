@@ -11,6 +11,13 @@ import { icons } from "../../../utils/icons";
 const SinglePhoto = styled.div`
   position: relative;
 
+  .photo_title {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: ${colors.primary};
+  }
+
   .photo_img {
     width: 100%;
     height: 100%;
@@ -20,7 +27,7 @@ const SinglePhoto = styled.div`
 
   .photo_delete {
     position: absolute;
-    top: 16px;
+    top: 48px;
     right: 16px;
   }
 `;
@@ -30,11 +37,17 @@ const DropzoneStyled = styled.div`
   justify-content: center;
   align-items: center;
   height: calc(100% - 35px);
-  //   height: 100%;
   border-radius: 16px;
   border: 2px dashed ${colors.primary};
   transition: 0.08s linear;
   cursor: pointer;
+
+  .photo_title {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: ${colors.primary};
+  }
 
   &:hover {
     border: 2px dashed ${colors.primaryHover};
@@ -53,7 +66,12 @@ const DropzoneStyled = styled.div`
   }
 `;
 
-export const Dropzone = ({ uploads, setUploads, limit = 1 }) => {
+export const Dropzone = ({
+  title = "",
+  limit = 1,
+  uploads = [],
+  setUploads = () => {},
+}) => {
   const resizeFile = (file) => {
     return new Promise((resolve) =>
       Resizer.imageFileResizer(
@@ -87,6 +105,8 @@ export const Dropzone = ({ uploads, setUploads, limit = 1 }) => {
   if (uploads.length === 1) {
     return (
       <SinglePhoto>
+        <h2 className="photo_title">{title}</h2>
+
         <img
           className="photo_img"
           src={
@@ -110,7 +130,10 @@ export const Dropzone = ({ uploads, setUploads, limit = 1 }) => {
 
   return (
     <DropzoneStyled {...getRootProps({ isDragActive })}>
+      <h2 className="photo_title">{title}</h2>
+
       <input {...getInputProps()} />
+
       {isDragActive ? (
         <p>Отпускайте!</p>
       ) : (

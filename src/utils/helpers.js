@@ -1,6 +1,11 @@
 import { storage } from "./firebase";
 
+import { EditorState, ContentState } from "draft-js";
+import htmlToDraft from "html-to-draftjs";
+
 import { colors } from "./colors";
+
+// Image loaders
 
 export const imgUploader = (file, num, userID, addPath = "") => {
   if (typeof file === "string") return true;
@@ -131,4 +136,28 @@ export const totalPeriodCalc = (jobExp) => {
   }, 0);
 
   return `${periods.jobRangeWorder(new Date(jobExpTotalMs))}`;
+};
+
+// Url strings handlers
+
+export const openUrlWithCheck = (url) => {
+  if (url.includes("http://") || url.includes("https://")) {
+    return window.open(url, "_blank");
+  }
+
+  return window.open("http://".concat(url), "_blank");
+};
+
+// editors state creators
+
+export const formOneEditorState = (html) => {
+  if (html) {
+    const contentState = ContentState.createFromBlockArray(
+      htmlToDraft(html).contentBlocks
+    );
+
+    return EditorState.createWithContent(contentState);
+  }
+
+  return EditorState.createEmpty();
 };

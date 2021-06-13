@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { Form, Field } from "react-final-form";
 import { registerLocale } from "react-datepicker";
 import DatePicker from "react-datepicker";
@@ -11,6 +10,12 @@ import { Checkbox } from "../inputs/Checkbox";
 import { Button } from "../buttons/Button";
 import { ButtonGhost } from "../buttons/ButtonGhost";
 
+import {
+  required,
+  minTextLength,
+  composeValidators,
+} from "../../../utils/validators";
+
 import { colors } from "../../../utils/colors";
 import { words } from "../../../utils/worder";
 import { icons } from "../../../utils/icons";
@@ -18,7 +23,7 @@ import { icons } from "../../../utils/icons";
 registerLocale("ru", ru);
 
 const DescriptionBlock = styled.div`
-  margin-bottom: 32px;
+  margin-bottom: 14px;
 
   &:last-child {
     margin-bottom: 0;
@@ -154,14 +159,11 @@ export const FormProfileTwo = ({
 }) => {
   const dater = (dateStr) => (dateStr ? new Date(dateStr) : new Date());
 
-  const [startDate, setStartDt] = useState(dater(initValues.startDate));
-  const [endDate, setEndDt] = useState(dater(initValues.endDate));
-  const [noEndDate, setNoEndDate] = useState(false);
-
-  useEffect(() => {
-    if (startDate > endDate) setEndDt(startDate);
-    if (initValues.noEndDate !== undefined) setNoEndDate(initValues.noEndDate);
-  }, [startDate, endDate, initValues.noEndDate]);
+  const initialValues = {
+    ...initValues,
+    startDate: dater(initValues.startDate),
+    endDate: dater(initValues.endDate),
+  };
 
   const onSubmit = (formData) => {
     if (formData.noEndDate) formData.endDate = false;
@@ -174,9 +176,15 @@ export const FormProfileTwo = ({
   return (
     <Form
       onSubmit={onSubmit}
-      initialValues={initValues}
-      render={({ handleSubmit, form }) => {
-        const close = (e) => {
+      initialValues={initialValues}
+      render={({ handleSubmit, form, submitting, pristine, values }) => {
+        //
+        const periodOnChange = (date, name) => {
+          if (name === "startDate") return form.change(name, date);
+          if (name === "endDate") return form.change(name, date);
+        };
+
+        const closeForm = (e) => {
           e.preventDefault();
           setForm();
         };
@@ -208,7 +216,7 @@ export const FormProfileTwo = ({
                     <ButtonGhost
                       icon={icons.close}
                       iconsize={32}
-                      handler={close}
+                      handler={closeForm}
                     />
                   </div>
                 )}
@@ -223,25 +231,20 @@ export const FormProfileTwo = ({
 
                     <Field
                       name="startDate"
-                      render={({ input, meta, ...props }) => {
-                        input.onChange(startDate);
-                        return (
-                          <div>
-                            <DatePicker
-                              {...props}
-                              className="block_date"
-                              showPopperArrow={false}
-                              locale="ru"
-                              onChange={(dt) => setStartDt(dt)}
-                              selected={startDate}
-                              dateFormat="MM/yyyy"
-                              showMonthYearPicker
-                              showFullMonthYearPicker
-                              maxDate={new Date()}
-                            />
-                          </div>
-                        );
-                      }}
+                      render={({ input, meta, ...props }) => (
+                        <DatePicker
+                          {...props}
+                          className="block_date"
+                          showPopperArrow={false}
+                          locale="ru"
+                          onChange={(dt) => periodOnChange(dt, input.name)}
+                          selected={values.startDate}
+                          dateFormat="MM/yyyy"
+                          showMonthYearPicker
+                          showFullMonthYearPicker
+                          maxDate={new Date()}
+                        />
+                      )}
                     />
                   </PeriodBlock>
 
@@ -251,37 +254,30 @@ export const FormProfileTwo = ({
                     <div className="block_checkbox">
                       <Field
                         name="noEndDate"
-                        component={Checkbox}
+                        render={Checkbox}
                         type="checkbox"
                         id="noEndDatePeriod"
                         title="По текущее время"
-                        checked={noEndDate}
-                        setActive={setNoEndDate}
                       />
                     </div>
 
-                    {!noEndDate && (
+                    {!values.noEndDate && (
                       <Field
                         name="endDate"
-                        render={({ input, meta, ...props }) => {
-                          input.onChange(endDate);
-                          return (
-                            <div>
-                              <DatePicker
-                                {...props}
-                                className="block_date"
-                                showPopperArrow={false}
-                                locale="ru"
-                                onChange={(dt) => setEndDt(dt)}
-                                selected={endDate}
-                                dateFormat="MM/yyyy"
-                                showMonthYearPicker
-                                showFullMonthYearPicker
-                                maxDate={new Date()}
-                              />
-                            </div>
-                          );
-                        }}
+                        render={({ input, meta, ...props }) => (
+                          <DatePicker
+                            {...props}
+                            className="block_date"
+                            showPopperArrow={false}
+                            locale="ru"
+                            onChange={(dt) => periodOnChange(dt, input.name)}
+                            selected={values.endDate}
+                            dateFormat="MM/yyyy"
+                            showMonthYearPicker
+                            showFullMonthYearPicker
+                            maxDate={new Date()}
+                          />
+                        )}
                       />
                     )}
                   </PeriodBlock>
@@ -294,6 +290,7 @@ export const FormProfileTwo = ({
                     <Field
                       name="company"
                       component={TextInput}
+                      validate={composeValidators(required, minTextLength(3))}
                       placeholder={words.stage2form.companyPh}
                     />
                   </DescriptionBlock>
@@ -306,21 +303,24 @@ export const FormProfileTwo = ({
                     <Field
                       name="companyActivity"
                       component={TextInput}
+                      validate={composeValidators(required, minTextLength(5))}
                       placeholder={words.stage2form.companyActivityPh}
                     />
                   </DescriptionBlock>
 
-                  <DescriptionBlock>
-                    <h2 className="block_title">
-                      {words.stage2form.companySite}
-                    </h2>
+                  {values.companySite && (
+                    <DescriptionBlock>
+                      <h2 className="block_title">
+                        {words.stage2form.companySite}
+                      </h2>
 
-                    <Field
-                      name="companySite"
-                      component={TextInput}
-                      placeholder={words.stage2form.companySitePh}
-                    />
-                  </DescriptionBlock>
+                      <Field
+                        name="companySite"
+                        component={TextInput}
+                        placeholder={words.stage2form.companySitePh}
+                      />
+                    </DescriptionBlock>
+                  )}
 
                   <DescriptionBlock>
                     <h2 className="block_title">{words.stage2form.position}</h2>
@@ -328,6 +328,7 @@ export const FormProfileTwo = ({
                     <Field
                       name="position"
                       component={TextInput}
+                      validate={composeValidators(required, minTextLength(3))}
                       placeholder={words.stage2form.positionPh}
                     />
                   </DescriptionBlock>
@@ -338,6 +339,7 @@ export const FormProfileTwo = ({
                     <Field
                       name="duty"
                       component={Textarea}
+                      validate={composeValidators(required, minTextLength(12))}
                       placeholder={words.stage2form.dutyPh}
                     />
                   </DescriptionBlock>
@@ -346,7 +348,12 @@ export const FormProfileTwo = ({
             </div>
 
             <div className="form_buttons">
-              <Button title="Сохранить" width={256} icon={icons.success} />
+              <Button
+                title="Сохранить"
+                width={256}
+                icon={icons.success}
+                disabled={submitting || pristine}
+              />
             </div>
           </FormStyled>
         );

@@ -23,7 +23,7 @@ const ButtonStyled = styled.button`
   border: none;
   outline: none;
   background-color: transparent;
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? "default" : "pointer")};
   transition: 0.08s linear;
   will-change: transform;
 

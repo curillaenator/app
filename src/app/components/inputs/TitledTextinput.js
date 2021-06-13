@@ -3,7 +3,20 @@ import styled from "styled-components";
 import { colors } from "../../../utils/colors";
 
 const InputStyled = styled.div`
-  .textinput {
+  margin-bottom: 14px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  .input_title {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: ${colors.primary};
+  }
+
+  .input_input {
     width: 100%;
     height: 56px;
     margin-bottom: 4px;
@@ -23,7 +36,7 @@ const InputStyled = styled.div`
     }
   }
 
-  .subtitle {
+  .input_sub {
     width: 100%;
     min-height: 14px;
     margin-left: 12px;
@@ -33,14 +46,14 @@ const InputStyled = styled.div`
   }
 `;
 
-export const TextInput = ({ input, meta, subtitle, ...props }) => {
+export const TitledTextinput = ({ input, meta, title, subtitle, ...props }) => {
   const error = meta.touched && meta.error;
-  
 
   return (
     <InputStyled error={error}>
-      <input {...input} {...props} className="textinput" />
-      <div className="subtitle">{error ? meta.error : subtitle}</div>
+      {title && <h2 className="input_title">{title}</h2>}
+      <input {...input} {...props} className="input_input" />
+      <div className="input_sub">{error ? meta.error : subtitle}</div>
     </InputStyled>
   );
 };

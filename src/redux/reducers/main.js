@@ -1,5 +1,6 @@
 import { batch } from "react-redux";
 import { db, storage } from "../../utils/firebase";
+
 import { imgUploader, getAvatar, totalPeriodCalc } from "../../utils/helpers";
 
 import { setUser, setStarred } from "./init";
@@ -173,14 +174,16 @@ export const getProfile = (profileID) => (dispatch, getState) => {
   });
 };
 
-export const createProfile = (data, upl) => async (dispatch, getState) => {
+export const createProfile = (data) => async (dispatch, getState) => {
   batch(() => {
     dispatch(setProgress(0));
   });
 
   const userID = await getState().init.user.userID;
-
   const profileID = (await db.ref("profiles").push()).key;
+  const uploads = [...data.uploads];
+
+  delete data.uploads;
 
   const newProfile = {
     ...data,
@@ -191,7 +194,7 @@ export const createProfile = (data, upl) => async (dispatch, getState) => {
   };
 
   await Promise.all(
-    upl.map((photo, num) => imgUploader(photo, num, userID, "avatar/"))
+    uploads.map((photo, num) => imgUploader(photo, num, userID, "avatar/"))
   )
     .then(() => dispatch(setProgress(40)))
     .catch((err) => console.log(err));
@@ -218,9 +221,7 @@ export const createProfile = (data, upl) => async (dispatch, getState) => {
   db.ref(`profiles/${profileID}`).update(newProfile, onUpdate);
 };
 
-export const editProfile = (data, upl) => async (dispatch, getState) => {
-  delete data.avatarURL;
-
+export const editProfile = (data) => async (dispatch, getState) => {
   batch(() => {
     dispatch(setProgress(0));
     dispatch(setLoadProfile(true));
@@ -228,10 +229,13 @@ export const editProfile = (data, upl) => async (dispatch, getState) => {
 
   const userID = getState().init.user.userID;
   const profileID = getState().init.user.profileID;
+  const uploads = [...data.uploads];
 
-  if (typeof upl[0] !== "string") {
+  delete data.uploads;
+
+  if (typeof uploads[0] !== "string") {
     await Promise.all(
-      upl.map((photo, num) => imgUploader(photo, num, userID, "avatar/"))
+      uploads.map((photo, num) => imgUploader(photo, num, userID, "avatar/"))
     )
       .then(() => dispatch(setProgress(70)))
       .catch((err) => console.log(err));
@@ -252,6 +256,8 @@ export const editProfile = (data, upl) => async (dispatch, getState) => {
 export const removeProfile = (profileID) => (dispatch, getState) => {
   const userID = getState().init.user.userID;
   const profile = getState().main.profile;
+  // const chatRooms = getState().chat.chatRooms;
+  // const chatRoomIDs = Object.keys(chatRooms);
 
   batch(() => {
     dispatch(setProgress(0));
@@ -265,9 +271,43 @@ export const removeProfile = (profileID) => (dispatch, getState) => {
         .ref(profile.avatarPath)
         .listAll()
         .then((res) => res.items.forEach((item) => item.delete()))
-        .then(() => dispatch(setProgress(30)))
+        .then(() => dispatch(setProgress(20)))
         .catch((err) => console.log(err));
     }
+
+    // if (chatRoomIDs.length > 0) {
+    //   const allMessagesOfProfileRooms = chatRoomIDs.map((roomID) => [
+    //     `chatmsgs/${roomID}`,
+    //     null,
+    //   ]);
+
+    //   const allRoomOfUser = chatRoomIDs.map((roomID) => [
+    //     `chatrooms/${userID}/${roomID}`,
+    //     null,
+    //   ]);
+
+    //   const allUserRoomsInOpponent = chatRoomIDs.map((roomID) => {
+    //     const opponentID = chatRooms[roomID].opponentID;
+    //     return [`chatrooms/${opponentID}/${roomID}`, null];
+    //   });
+
+    //   const userChatsRemove = {
+    //     ...Object.fromEntries(allMessagesOfProfileRooms),
+    //     ...Object.fromEntries(allRoomOfUser),
+    //     ...Object.fromEntries(allUserRoomsInOpponent),
+    //   };
+
+    //   await db
+    //     .ref()
+    //     .update(userChatsRemove)
+    //     .then(() => {
+    //       batch(() => {
+    //         dispatch(setProgress(40));
+    //         dispatch(resetChatState());
+    //       });
+    //     })
+    //     .catch((err) => console.log(err));
+    // }
 
     await db
       .ref(`users/${userID}`)
@@ -421,7 +461,7 @@ export const getStarredList = () => async (dispatch, getState) => {
     });
   }
 
-  console.log(starredSnaps);
+  // console.log(starredSnaps);
 };
 
 export const handleStarred = (profileID) => (dispatch, getState) => {

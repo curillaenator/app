@@ -1,67 +1,25 @@
-import { useState, useEffect } from "react";
 import { Form, Field } from "react-final-form";
-import { Editor } from "react-draft-wysiwyg";
-import { EditorState, convertToRaw, ContentState } from "draft-js";
+import { convertToRaw } from "draft-js";
 import draftToHtml from "draftjs-to-html";
-import htmlToDraft from "html-to-draftjs";
 import styled from "styled-components";
 
 import { Dropzone } from "../dropzone/Dropzone";
-import { TextInput } from "../inputs/Textinput";
+import { TitledTextinput } from "../inputs/TitledTextinput";
+import { TitledEditor } from "../inputs/TitledEditor";
 import { Button } from "../buttons/Button";
 import { ButtonGhost } from "../buttons/ButtonGhost";
+
+import {
+  required,
+  minTextLength,
+  composeValidators,
+} from "../../../utils/validators";
+
+import { formOneEditorState } from "../../../utils/helpers";
 
 import { colors } from "../../../utils/colors";
 import { words } from "../../../utils/worder";
 import { icons } from "../../../utils/icons";
-
-const EditorBlock = styled.div`
-  margin-bottom: 32px;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-
-  .meta_title {
-    font-size: 14px;
-    font-weight: 700;
-    margin-bottom: 16px;
-    color: ${colors.primary};
-  }
-
-  .wrapper {
-    .toolbar {
-      margin-bottom: 0;
-      padding: 16px;
-      border-radius: 16px 16px 0 0;
-      background-color: ${colors.bgLightGray};
-    }
-
-    .editor {
-      padding: 16px;
-      border-radius: 16px;
-      background-color: ${colors.bgLightGray};
-      font-weight: 700;
-      font-size: 16px;
-      color: ${colors.primary};
-    }
-  }
-`;
-
-const MetaBlock = styled.div`
-  margin-bottom: 32px;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-
-  .meta_title {
-    font-size: 14px;
-    font-weight: 700;
-    margin-bottom: 16px;
-    color: ${colors.primary};
-  }
-`;
 
 const FormTab = styled.div`
   width: 100%;
@@ -121,42 +79,34 @@ export const FormProfileOne = ({
   createProfile = () => {},
   editProfile = () => {},
 }) => {
-  const createEditorState = () => {
-    if (initValues.skillsHTML) {
-      const contentBlock = htmlToDraft(initValues.skillsHTML);
-      const contentState = ContentState.createFromBlockArray(
-        contentBlock.contentBlocks
-      );
-      return EditorState.createWithContent(contentState);
-    }
-
-    return EditorState.createEmpty();
+  const initialValues = {
+    ...initValues,
+    uploads: initValues.avatarURL ? [initValues.avatarURL] : [],
+    editorState: formOneEditorState(initValues.skillsHTML),
   };
-
-  const [uploads, setUploads] = useState([]);
-  const [editorSt, setEditorSt] = useState({
-    editorState: createEditorState(),
-  });
-
-  useEffect(() => {
-    if (initValues.avatarURL) return setUploads([initValues.avatarURL]);
-  }, [initValues.avatarURL]);
 
   const onSubmit = (formData) => {
     formData.skillsHTML = draftToHtml(
-      convertToRaw(editorSt.editorState.getCurrentContent())
+      convertToRaw(formData.editorState.getCurrentContent())
     );
 
+    delete formData.editorState;
+    delete formData.avatarURL;
+
     setForm();
-    if (!edit) return createProfile(formData, uploads);
-    if (edit) return editProfile(formData, uploads);
+    if (!edit) return createProfile(formData);
+    if (edit) return editProfile(formData);
   };
 
   return (
     <Form
       onSubmit={onSubmit}
-      initialValues={initValues}
-      render={({ handleSubmit, form }) => {
+      initialValues={initialValues}
+      render={({ handleSubmit, submitting, values, form }) => {
+        //
+        const setUploads = (uploads) => form.change("uploads", uploads);
+        const setEdState = (edState) => form.change("editorState", edState);
+
         const close = (e) => {
           e.preventDefault();
           setForm();
@@ -191,74 +141,62 @@ export const FormProfileOne = ({
 
               <div className="form_body">
                 <FormTab>
-                  <MetaBlock>
-                    <h2 className="meta_title">{words.profForm.photo}</h2>
-
-                    <Dropzone uploads={uploads} setUploads={setUploads} />
-                  </MetaBlock>
+                  <Dropzone
+                    title={words.profForm.photo}
+                    uploads={values.uploads}
+                    setUploads={setUploads}
+                  />
                 </FormTab>
 
                 <FormTab>
-                  <MetaBlock>
-                    <h2 className="meta_title">{words.profForm.name}</h2>
+                  <Field
+                    name="name"
+                    title={words.profForm.name}
+                    placeholder={words.profForm.namePh}
+                    component={TitledTextinput}
+                    validate={composeValidators(required, minTextLength(3))}
+                  />
 
-                    <Field
-                      name="name"
-                      component={TextInput}
-                      placeholder={words.profForm.namePh}
-                    />
-                  </MetaBlock>
+                  <Field
+                    name="city"
+                    title={words.profForm.city}
+                    placeholder={words.profForm.cityPh}
+                    component={TitledTextinput}
+                    validate={composeValidators(required, minTextLength(3))}
+                  />
 
-                  <MetaBlock>
-                    <h2 className="meta_title">{words.profForm.city}</h2>
+                  <Field
+                    name="job"
+                    title={words.profForm.job}
+                    placeholder={words.profForm.jobPh}
+                    component={TitledTextinput}
+                    validate={composeValidators(required, minTextLength(3))}
+                  />
 
-                    <Field
-                      name="city"
-                      component={TextInput}
-                      placeholder={words.profForm.cityPh}
-                    />
-                  </MetaBlock>
+                  <Field
+                    name="languages"
+                    title={words.profForm.languages}
+                    placeholder={words.profForm.languagesPh}
+                    component={TitledTextinput}
+                  />
 
-                  <MetaBlock>
-                    <h2 className="meta_title">{words.profForm.job}</h2>
-
-                    <Field
-                      name="job"
-                      component={TextInput}
-                      placeholder={words.profForm.jobPh}
-                    />
-                  </MetaBlock>
-
-                  <MetaBlock>
-                    <h2 className="meta_title">{words.profForm.languages}</h2>
-
-                    <Field
-                      name="languages"
-                      component={TextInput}
-                      placeholder={words.profForm.languagesPh}
-                    />
-                  </MetaBlock>
-
-                  <EditorBlock>
-                    <h2 className="meta_title">{words.profForm.skills}</h2>
-
-                    <Editor
-                      toolbarHidden
-                      editorState={editorSt.editorState}
-                      toolbarClassName="toolbar"
-                      wrapperClassName="wrapper"
-                      editorClassName="editor"
-                      onEditorStateChange={(editorState) =>
-                        setEditorSt({ editorState })
-                      }
-                    />
-                  </EditorBlock>
+                  <TitledEditor
+                    title={words.profForm.skills}
+                    toolbarHidden
+                    edState={values.editorState}
+                    setEdState={setEdState}
+                  />
                 </FormTab>
               </div>
             </div>
 
             <div className="form_buttons">
-              <Button title="Сохранить" width={256} icon={icons.success} />
+              <Button
+                title="Сохранить"
+                width={256}
+                icon={icons.success}
+                disabled={submitting}
+              />
             </div>
           </FormStyled>
         );

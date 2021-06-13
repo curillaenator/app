@@ -5,7 +5,11 @@ import { ButtonGhost } from "../buttons/ButtonGhost";
 import { Dropdown } from "../controls/Dropdown";
 import { FormProfileTwo } from "../formprofile/FormProfileTwo";
 
-import { periodCalc, sortJobExp } from "../../../utils/helpers";
+import {
+  periodCalc,
+  sortJobExp,
+  openUrlWithCheck,
+} from "../../../utils/helpers";
 
 import { colors } from "../../../utils/colors";
 import { icons } from "../../../utils/icons";
@@ -131,8 +135,8 @@ export const ProfileBlockTwo = ({
   updateJobExperience,
   removeJobExperience,
 }) => {
-  const [addForm, setAddForm] = useState(false);
-  const [editForm, setEditForm] = useState(null);
+  const [addForm, setAddForm] = useState(false); // boolean
+  const [editForm, setEditForm] = useState(null); // null | jobExpID
 
   const deleteJobDropdownItems = [
     {
@@ -190,7 +194,7 @@ export const ProfileBlockTwo = ({
                   <h4 className="block_string-title">Сайт компании:</h4>
                   <div
                     className="block_string-url"
-                    onClick={() => window.open(job.companySite, "_blank")}
+                    onClick={() => openUrlWithCheck(job.companySite)}
                   >
                     {job.companySite}
                   </div>

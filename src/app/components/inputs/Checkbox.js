@@ -32,11 +32,11 @@ const InputStyled = styled.div`
       position: absolute;
       top: 50%;
       left: -40px;
-      width: 32px;
-      height: 32px;
-      border-radius: 12px;
+      width: 26px;
+      height: 26px;
+      border-radius: 9px;
       background-color: ${colors.bgLightGray};
-      border: 2px solid ${colors.primary};
+      // border: 2px solid ${colors.primary};
       transform: translateY(-50%);
       background-position: center;
       background-size: 60%;
@@ -49,15 +49,13 @@ const InputStyled = styled.div`
   }
 `;
 
-export const Checkbox = ({ input, meta, id, title, setActive }) => {
+export const Checkbox = ({ input, meta, id, title, ...props }) => {
   return (
     <InputStyled>
       <div className="checkbox">
-        <input type="checkbox" id={id} {...input} />
+        <input type="checkbox" id={id} {...input} {...props} />
 
-        <label htmlFor={id} onClick={() => setActive(!input.checked)}>
-          {title}
-        </label>
+        <label htmlFor={id}>{title}</label>
       </div>
     </InputStyled>
   );
