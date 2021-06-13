@@ -11,7 +11,7 @@ const PhotoStyled = styled(Link)`
   position: relative;
   width: 30%;
   height: 0;
-  padding-top: 70%;
+  padding-top: 75%;
   border-radius: 16px 0 0 16px;
   text-decoration: none;
   overflow: hidden;
@@ -45,9 +45,22 @@ const PhotoStyled = styled(Link)`
   }
 `;
 
+const MetaRow = styled.div`
+  min-height: ${({ rows }) => rows * 16}px;
+  margin-bottom: 4px;
+  font-size: 16px;
+  font-weight: ${({ bold }) => (bold ? 800 : 600)};
+  color: ${({ lighten }) => (lighten ? colors.fontTitle : colors.fontPrimary)};
+
+  display: -webkit-box;
+  -webkit-line-clamp: ${({ rows }) => rows};
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+`;
+
 const MetaStyled = styled(Link)`
   text-decoration: none;
-  height: 100%;
+  height: calc(100% - 48px);
   padding: 16px;
 
   .title {
@@ -55,26 +68,36 @@ const MetaStyled = styled(Link)`
     font-size: 18px;
     font-weight: 800;
     color: ${colors.fontPrimary};
-    // overflow: hidden;
-    // white-space: nowrap;
-    // text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
-  .data {
-    margin-bottom: 4px;
-    font-size: 14px;
-    font-weight: 600;
-    color: ${colors.fontPrimary};
-    // overflow: hidden;
-    // white-space: nowrap;
-    // text-overflow: ellipsis;
-  }
+  // .data_onerow {
+  //   margin-bottom: 4px;
+  //   font-size: 14px;
+  //   font-weight: 600;
+  //   color: ${colors.fontPrimary};
+  //   overflow: hidden;
+  //   white-space: nowrap;
+  //   text-overflow: ellipsis;
+  // }
 
-  .highlight {
-    min-height: 32px;
-    font-weight: 800;
-    color: ${colors.fontTitle} !important;
-  }
+  // .data_tworows {
+  //   margin-bottom: 4px;
+  //   font-size: 14px;
+  //   font-weight: 600;
+  //   color: ${colors.fontPrimary};
+  //   display: -webkit-box;
+  //   -webkit-line-clamp: 2;
+  //   -webkit-box-orient: vertical;
+  //   overflow: hidden;
+  // }
+
+  // .highlight {
+  //   font-weight: 800;
+  //   color: ${colors.fontTitle};
+  // }
 
   @media (min-width: 480px) {
     padding: 24px;
@@ -177,22 +200,19 @@ export const UserCard = ({
         <MetaStyled to={`/profile/${profile.profileID}`}>
           <div className="title">{profile.name}</div>
 
-          <div className="data highlight">{profile.job}</div>
+          <MetaRow rows={2} lighten bold>
+            {profile.job}
+          </MetaRow>
 
-          <div className="data">{profile.city}</div>
+          <MetaRow rows={1}>{profile.city}</MetaRow>
 
-          <div className="data">Стаж {profile.jobExpTotal}</div>
+          <MetaRow rows={1}>Стаж {profile.jobExpTotal}</MetaRow>
 
-          <div className="data">Языки: {profile.languages}</div>
+          <MetaRow rows={2}>Языки: {profile.languages}</MetaRow>
         </MetaStyled>
 
         {userID && profile.userID !== userID && (
           <div className="card_info-controls">
-            {/* <ButtonGhost
-              title={isMobile1024 ? "" : "Сообщение"}
-              icon={icons.chat}
-              iconsize={isMobile1024 ? 24 : 18}
-            /> */}
             <ButtonGhost
               title={
                 isMobile ? "" : isStarred ? "Снять отметку" : "В избранное"

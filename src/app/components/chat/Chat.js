@@ -201,7 +201,7 @@ const ChatConatiner = ({
 
   const rooms = Object.values(chatRooms);
   const roomMsgs = Object.values(curRoomMsgs);
-  const dialogNeMsgs = !!curRoom ? chatRooms[curRoom.roomID].newMessages : 0;
+  const dialogNewMsgs = !!curRoom ? chatRooms[curRoom.roomID].newMessages : 0;
 
   const onSubmit = (messageData) => sendMessage(messageData);
 
@@ -221,19 +221,25 @@ const ChatConatiner = ({
       </ChatHeader>
 
       <div className="chatbody">
-        {rooms.map((room) => (
-          <ChatContacts key={room.roomID} autoHide>
-            <div className="contact" onClick={() => handleCurRoom(room.roomID)}>
+        <ChatContacts autoHide>
+          {rooms.map((room) => (
+            <div
+              className="contact"
+              onClick={() => handleCurRoom(room.roomID)}
+              key={room.roomID}
+            >
               <Avatar
                 imgSrc={room.opponent.avatar}
-                username={room.opponent.userName}
+                username={room.opponent.username}
                 notesNum={room.newMessages}
+                margin="0 16px 0 0"
+                shadow
               />
 
-              <div className="contact_username">{room.opponent.userName}</div>
+              <div className="contact_username">{room.opponent.username}</div>
             </div>
-          </ChatContacts>
-        ))}
+          ))}
+        </ChatContacts>
 
         <ChatDialog
           isDialog={!!curRoom}
@@ -245,11 +251,13 @@ const ChatConatiner = ({
                 <Avatar
                   imgSrc={curRoom.opponent.avatar}
                   username={curRoom.opponent.userName}
-                  notesNum={dialogNeMsgs}
+                  notesNum={dialogNewMsgs}
+                  margin="0 16px 0 0"
+                  shadow
                 />
 
                 <div className="dialog_head-username">
-                  {curRoom.opponent.userName}
+                  {curRoom.opponent.username}
                 </div>
 
                 <div className="dialog_head-close">

@@ -7,14 +7,17 @@ const AvatarStyled = styled.div`
   flex-shrink: 0;
   width: ${({ size }) => size}px;
   height: ${({ size }) => size}px;
-  // will-change: filter;
-  // filter: drop-shadow(0 12px 12px ${colors.shadow});
+  margin: ${({ margin }) => margin};
 
   .image {
     width: 100%;
     height: 100%;
     border-radius: 50%;
     object-fit: cover;
+    will-change: filter;
+    filter: drop-shadow(
+      0 12px 8px ${({ shadow }) => (shadow ? colors.shadow : "transparent")}
+    );
   }
 
   .notification {
@@ -36,9 +39,21 @@ const AvatarStyled = styled.div`
   }
 `;
 
-export const Avatar = ({ imgSrc, username, notesNum, size = 64 }) => {
+export const Avatar = ({
+  imgSrc,
+  username,
+  notesNum,
+  shadow = false,
+  size = 64,
+  margin = "0",
+}) => {
   return (
-    <AvatarStyled isNote={notesNum > 0} size={size}>
+    <AvatarStyled
+      isNote={notesNum > 0}
+      size={size}
+      margin={margin}
+      shadow={shadow}
+    >
       <img className="image" src={imgSrc} alt={username} />
       <div className="notification">{notesNum}</div>
     </AvatarStyled>

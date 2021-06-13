@@ -33,6 +33,7 @@ const BlockOneStyled = styled.div`
       }
 
       &_blur {
+        will-change: filter;
         transform: translateY(24px);
         filter: blur(20px) opacity(75%);
       }

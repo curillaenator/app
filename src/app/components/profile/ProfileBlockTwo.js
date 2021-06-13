@@ -5,7 +5,7 @@ import { ButtonGhost } from "../buttons/ButtonGhost";
 import { Dropdown } from "../controls/Dropdown";
 import { FormProfileTwo } from "../formprofile/FormProfileTwo";
 
-import { periodCalc } from "../../../utils/helpers";
+import { periodCalc, sortJobExp } from "../../../utils/helpers";
 
 import { colors } from "../../../utils/colors";
 import { icons } from "../../../utils/icons";
@@ -134,9 +134,7 @@ export const ProfileBlockTwo = ({
   const [addForm, setAddForm] = useState(false);
   const [editForm, setEditForm] = useState(null);
 
-  const jobs = Object.values(profile.jobExp || {}).reverse();
-
-  const deleteJob = [
+  const deleteJobDropdownItems = [
     {
       title: "Да",
       icon: icons.delete,
@@ -150,7 +148,7 @@ export const ProfileBlockTwo = ({
     <BlockTwoStyled>
       <div className="blockTwo_label">Опыт работы:</div>
 
-      {jobs.map((job) => (
+      {sortJobExp(profile.jobExp).map((job) => (
         <div className="job_container" key={job.jobID}>
           {editForm === job.jobID && (
             <FormProfileTwo
@@ -179,7 +177,7 @@ export const ProfileBlockTwo = ({
                     title={isMobile ? "" : "Удалить"}
                     icon={icons.delete}
                     iconsize={isMobile ? 26 : 18}
-                    items={deleteJob}
+                    items={deleteJobDropdownItems}
                     danger
                   />
                 </div>

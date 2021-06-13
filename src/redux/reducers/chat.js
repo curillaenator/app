@@ -52,26 +52,24 @@ export const resetNewMsgsNote = (roomID) => (dispatch, getState) => {
 export const getChatRooms = () => (dispatch, getState) => {
   const userID = getState().init.user.userID;
 
-  if (!userID) return dispatch(setChatRooms({}));
-
   db.ref(`chatrooms/${userID}`).on("child_added", async (room) => {
     await db.ref(`users/${room.val().opponentID}`).once("value", (opponSn) => {
-      const opponent = {
-        userName: opponSn.val().username,
-        avatar: opponSn.val().avatar,
-      };
+      if (opponSn.exists()) {
+        const opponent = {
+          username: opponSn.val().username,
+          avatar: opponSn.val().avatar,
+        };
 
-      const chatRooms = getState().chat.chatRooms;
-      const roomData = { ...room.val(), opponent };
+        const chatRooms = getState().chat.chatRooms;
+        const roomData = { ...room.val(), opponent };
 
-      dispatch(setChatRooms({ ...chatRooms, [room.key]: roomData }));
+        dispatch(setChatRooms({ ...chatRooms, [room.key]: roomData }));
+      }
     });
 
     db.ref(`chatrooms/${userID}/${room.key}`).on("child_changed", (newMsgs) => {
       const chatRooms = getState().chat.chatRooms;
       const updRoom = { ...chatRooms[room.key], newMessages: newMsgs.val() };
-
-      // console.log({ ...chatRooms, [room.key]: updRoom });
 
       dispatch(setChatRooms({ ...chatRooms, [room.key]: updRoom }));
     });
@@ -115,11 +113,13 @@ export const goChat = () => async (dispatch, getState) => {
   const roomExists = userRooms.some((uRoomID) => opponRooms.includes(uRoomID));
 
   if (roomExists) {
-    const roomID = userRooms.map((uRmID) =>
-      opponRooms.find((oRmID) => oRmID === uRmID)
-    );
+    const roomID = userRooms
+      .map((uRoomID) =>
+        opponRooms.find((opponRoomID) => opponRoomID === uRoomID)
+      )
+      .find((roomID) => !!roomID);
 
-    // console.log(roomID);
+    console.log(roomID);
 
     batch(() => {
       dispatch(setIsChat(true));

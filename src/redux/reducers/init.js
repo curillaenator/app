@@ -2,6 +2,7 @@ import { batch } from "react-redux";
 import { fb, auth, db } from "../../utils/firebase";
 
 import { chatOnSignOut } from "./chat";
+import { setProgress } from "./main";
 
 const SET_IS_INIT = "init/SET_IS_INIT";
 const SET_USER = "init/SET_USER";
@@ -61,10 +62,13 @@ export const signIn = () => async (dispatch) => {
 };
 
 export const signOut = () => (dispatch) => {
+  dispatch(setProgress(0));
+
   auth.signOut().then(() => {
     batch(() => {
       dispatch(setUser({ userID: null, isAdmin: false }));
       dispatch(chatOnSignOut());
+      dispatch(setProgress(100));
     });
   });
 };

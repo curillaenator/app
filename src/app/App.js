@@ -82,7 +82,7 @@ const ArtApp = ({
 
   // If initialized , then get chat rooms
 
-  useEffect(() => isInit && getChatRooms(), [isInit, getChatRooms, user]);
+  useEffect(() => user && user.userID && getChatRooms(), [getChatRooms, user]);
 
   // Handle progress bar
 

@@ -39,6 +39,15 @@ export const getAvatar = async (path) => {
   return resolve;
 };
 
+// Sorts functions
+
+export const sortJobExp = (jobExpDB) => {
+  return Object.values(jobExpDB || {}).sort((a, b) => {
+    const dateSrtToMs = (endDate) => (endDate ? new Date(endDate) : new Date());
+    return dateSrtToMs(b.endDate) - dateSrtToMs(a.endDate);
+  });
+};
+
 // Period calculators
 
 class Periods {
