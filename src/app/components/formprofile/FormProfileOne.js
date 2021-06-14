@@ -1,6 +1,5 @@
+import { useState } from "react";
 import { Form, Field } from "react-final-form";
-import { convertToRaw } from "draft-js";
-import draftToHtml from "draftjs-to-html";
 import styled from "styled-components";
 
 import { Dropzone } from "../dropzone/Dropzone";
@@ -15,7 +14,7 @@ import {
   composeValidators,
 } from "../../../utils/validators";
 
-import { formOneEditorState } from "../../../utils/helpers";
+import { newEditorState, convertEdStateToHtml } from "../../../utils/helpers";
 
 import { colors } from "../../../utils/colors";
 import { words } from "../../../utils/worder";
@@ -25,8 +24,8 @@ const FormTab = styled.div`
   width: 100%;
   margin-bottom: 32px;
 
-  @media (min-width: 768px) {
-    width: calc(50% - 16px);
+  @media (min-width: 1024px) {
+    width: calc(${({ width }) => width} - 16px);
     margin-bottom: 0;
   }
 `;
@@ -73,24 +72,22 @@ const FormStyled = styled.form`
 `;
 
 export const FormProfileOne = ({
+  isMobile,
   initValues = {},
   edit = false,
   setForm = () => {},
   createProfile = () => {},
   editProfile = () => {},
 }) => {
-  const initialValues = {
-    ...initValues,
-    uploads: initValues.avatarURL ? [initValues.avatarURL] : [],
-    editorState: formOneEditorState(initValues.skillsHTML),
-  };
+  const [edState, setEdState] = useState(newEditorState(initValues.skillsHTML));
+  const [uploads, setUploads] = useState(
+    initValues.avatarURL ? [initValues.avatarURL] : []
+  );
 
   const onSubmit = (formData) => {
-    formData.skillsHTML = draftToHtml(
-      convertToRaw(formData.editorState.getCurrentContent())
-    );
+    formData.skillsHTML = convertEdStateToHtml(edState);
+    formData.uploads = uploads;
 
-    delete formData.editorState;
     delete formData.avatarURL;
 
     setForm();
@@ -101,12 +98,9 @@ export const FormProfileOne = ({
   return (
     <Form
       onSubmit={onSubmit}
-      initialValues={initialValues}
+      initialValues={initValues}
       render={({ handleSubmit, submitting, values, form }) => {
         //
-        const setUploads = (uploads) => form.change("uploads", uploads);
-        const setEdState = (edState) => form.change("editorState", edState);
-
         const close = (e) => {
           e.preventDefault();
           setForm();
@@ -140,15 +134,16 @@ export const FormProfileOne = ({
               </div>
 
               <div className="form_body">
-                <FormTab>
+                <FormTab width="30%">
                   <Dropzone
+                    isMobile={isMobile}
                     title={words.profForm.photo}
-                    uploads={values.uploads}
+                    uploads={uploads}
                     setUploads={setUploads}
                   />
                 </FormTab>
 
-                <FormTab>
+                <FormTab width="70%">
                   <Field
                     name="name"
                     title={words.profForm.name}
@@ -183,7 +178,7 @@ export const FormProfileOne = ({
                   <TitledEditor
                     title={words.profForm.skills}
                     toolbarHidden
-                    edState={values.editorState}
+                    edState={edState}
                     setEdState={setEdState}
                   />
                 </FormTab>

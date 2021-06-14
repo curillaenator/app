@@ -73,7 +73,9 @@ const Profile = ({
             buttonIcon={icons.create}
           />
 
-          {isStage1Form && <FormProfileOne createProfile={createProfile} />}
+          {isStage1Form && (
+            <FormProfileOne createProfile={createProfile} isMobile={isMobile} />
+          )}
         </div>
       )}
 

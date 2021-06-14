@@ -1,6 +1,7 @@
 import { storage } from "./firebase";
 
-import { EditorState, ContentState } from "draft-js";
+import { EditorState, ContentState, convertToRaw } from "draft-js";
+import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
 
 import { colors } from "./colors";
@@ -148,9 +149,9 @@ export const openUrlWithCheck = (url) => {
   return window.open("http://".concat(url), "_blank");
 };
 
-// editors state creators
+// editor handlers
 
-export const formOneEditorState = (html) => {
+export const newEditorState = (html) => {
   if (html) {
     const contentState = ContentState.createFromBlockArray(
       htmlToDraft(html).contentBlocks
@@ -160,4 +161,8 @@ export const formOneEditorState = (html) => {
   }
 
   return EditorState.createEmpty();
+};
+
+export const convertEdStateToHtml = (edState) => {
+  return draftToHtml(convertToRaw(edState.getCurrentContent()));
 };

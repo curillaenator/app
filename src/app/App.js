@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import { connect } from "react-redux";
 import { Switch, Route } from "react-router-dom";
 import { RemoveScroll } from "react-remove-scroll";
@@ -7,12 +7,7 @@ import ProgressBar from "@ramonak/react-progress-bar";
 
 import { signCheck, signIn, signOut } from "../redux/reducers/init";
 import { setIsChat, getChatRooms } from "../redux/reducers/chat";
-import {
-  setMobile,
-  setMobile1024,
-  setProgress,
-  setProfileList,
-} from "../redux/reducers/main";
+import { setMobile, setProgress, setProfileList } from "../redux/reducers/main";
 
 import { LoaderFS } from "./components/loader/LoaderFS";
 import { MainPage } from "./pages/MainPage";
@@ -60,21 +55,23 @@ const ArtApp = ({
   signOut,
   setProgress,
   setMobile,
-  setMobile1024,
+  // setMobile1024,
   setProfileList,
   setIsChat,
   getChatRooms,
 }) => {
   // Chek mobile mode
 
-  useEffect(() => {
-    const watchResize = () => {
-      window.innerWidth < 768 ? setMobile(true) : setMobile(false);
-      window.innerWidth < 1024 ? setMobile1024(true) : setMobile1024(false);
-    };
+  const watchResize = useCallback(() => {
+    window.innerWidth < 1024 ? setMobile(true) : setMobile(false);
+  }, [setMobile]);
 
+  useEffect(() => {
+    watchResize();
     window.addEventListener("resize", watchResize);
-  }, [setMobile, setMobile1024]);
+
+    return () => window.removeEventListener("resize", watchResize);
+  }, [watchResize]);
 
   // Check if signed in or not
 
@@ -139,7 +136,6 @@ const mstp = (state) => ({
 
 export const App = connect(mstp, {
   setMobile,
-  setMobile1024,
   setProgress,
   signCheck,
   signIn,

@@ -119,7 +119,7 @@ export const goChat = () => async (dispatch, getState) => {
       )
       .find((roomID) => !!roomID);
 
-    console.log(roomID);
+    // console.log(roomID);
 
     batch(() => {
       dispatch(setIsChat(true));

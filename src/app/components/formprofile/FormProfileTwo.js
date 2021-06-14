@@ -308,19 +308,17 @@ export const FormProfileTwo = ({
                     />
                   </DescriptionBlock>
 
-                  {values.companySite && (
-                    <DescriptionBlock>
-                      <h2 className="block_title">
-                        {words.stage2form.companySite}
-                      </h2>
+                  <DescriptionBlock>
+                    <h2 className="block_title">
+                      {words.stage2form.companySite}
+                    </h2>
 
-                      <Field
-                        name="companySite"
-                        component={TextInput}
-                        placeholder={words.stage2form.companySitePh}
-                      />
-                    </DescriptionBlock>
-                  )}
+                    <Field
+                      name="companySite"
+                      component={TextInput}
+                      placeholder={words.stage2form.companySitePh}
+                    />
+                  </DescriptionBlock>
 
                   <DescriptionBlock>
                     <h2 className="block_title">{words.stage2form.position}</h2>

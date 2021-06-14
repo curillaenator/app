@@ -148,11 +148,13 @@ export const ProfileBlockTwo = ({
     { title: "Отмена", icon: icons.back, handler: () => {} },
   ];
 
+  const jobExpSorted = sortJobExp(profile.jobExp);
+
   return (
     <BlockTwoStyled>
       <div className="blockTwo_label">Опыт работы:</div>
 
-      {sortJobExp(profile.jobExp).map((job) => (
+      {jobExpSorted.map((job) => (
         <div className="job_container" key={job.jobID}>
           {editForm === job.jobID && (
             <FormProfileTwo

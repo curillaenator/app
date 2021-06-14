@@ -7,7 +7,6 @@ import { setUser, setStarred } from "./init";
 
 const SET_PROGRESS = "main/SET_PROGRESS";
 const SET_ISMOBILE = "main/SET_ISMOBILE";
-const SET_ISMOBILE1024 = "main/SET_ISMOBILE1024";
 const SET_SEARCHFORM = "main/SET_ISSEARCHFORM";
 const SET_STAGEONE = "main/SET_STAGEONE";
 const SET_STAGETWO = "main/SET_STAGETWO";
@@ -22,7 +21,6 @@ const SET_LOAD_STARLIST = "main/SET_LOAD_STARLIST";
 const initialState = {
   progress: null,
   isMobile: false,
-  isMobile1024: false,
   isSearchForm: false,
   isStage1Form: false,
   isStage2Form: false,
@@ -41,9 +39,6 @@ export const main = (state = initialState, action) => {
 
     case SET_ISMOBILE:
       return { ...state, isMobile: action.payload };
-
-    case SET_ISMOBILE1024:
-      return { ...state, isMobile1024: action.payload };
 
     case SET_SEARCHFORM:
       return { ...state, isSearchForm: action.payload };
@@ -83,7 +78,6 @@ export const main = (state = initialState, action) => {
 
 export const setProgress = (payload) => ({ type: SET_PROGRESS, payload });
 export const setMobile = (payload) => ({ type: SET_ISMOBILE, payload });
-export const setMobile1024 = (payload) => ({ type: SET_ISMOBILE1024, payload });
 export const setSearchForm = (payload) => ({ type: SET_SEARCHFORM, payload });
 export const setStage1Form = (payload) => ({ type: SET_STAGEONE, payload });
 export const setStage2Form = (payload) => ({ type: SET_STAGETWO, payload });
