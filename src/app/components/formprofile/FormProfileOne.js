@@ -3,7 +3,7 @@ import { Form, Field } from "react-final-form";
 import styled from "styled-components";
 
 import { Dropzone } from "../dropzone/Dropzone";
-import { TitledTextinput } from "../inputs/TitledTextinput";
+import { Textinput } from "../inputs/Textinput";
 import { TitledEditor } from "../inputs/TitledEditor";
 import { Button } from "../buttons/Button";
 import { ButtonGhost } from "../buttons/ButtonGhost";
@@ -148,7 +148,7 @@ export const FormProfileOne = ({
                     name="name"
                     title={words.profForm.name}
                     placeholder={words.profForm.namePh}
-                    component={TitledTextinput}
+                    component={Textinput}
                     validate={composeValidators(required, minTextLength(3))}
                   />
 
@@ -156,7 +156,7 @@ export const FormProfileOne = ({
                     name="city"
                     title={words.profForm.city}
                     placeholder={words.profForm.cityPh}
-                    component={TitledTextinput}
+                    component={Textinput}
                     validate={composeValidators(required, minTextLength(3))}
                   />
 
@@ -164,7 +164,7 @@ export const FormProfileOne = ({
                     name="job"
                     title={words.profForm.job}
                     placeholder={words.profForm.jobPh}
-                    component={TitledTextinput}
+                    component={Textinput}
                     validate={composeValidators(required, minTextLength(3))}
                   />
 
@@ -172,7 +172,14 @@ export const FormProfileOne = ({
                     name="languages"
                     title={words.profForm.languages}
                     placeholder={words.profForm.languagesPh}
-                    component={TitledTextinput}
+                    component={Textinput}
+                  />
+
+                  <Field
+                    name="languagesIT"
+                    title={words.profForm.languagesIT}
+                    placeholder={words.profForm.languagesITPh}
+                    component={Textinput}
                   />
 
                   <TitledEditor

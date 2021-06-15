@@ -63,8 +63,10 @@ const UserStyled = styled.div`
   align-items: center;
   text-decoration: none;
   color: ${colors.primary};
-  transition: 0.08s linear;
+  transition: 0.08s ease-in-out;
+  filter: drop-shadow(0 8px 8px ${colors.shadow});
   cursor: pointer;
+  will-change: filter;
 
   .user_name {
     font-size: 18px;
@@ -74,14 +76,12 @@ const UserStyled = styled.div`
 
   &:hover {
     transform: ${({ open }) => (open ? "scale(1)" : "scale(1.02)")};
-    filter: drop-shadow(
-      0 8px 8px ${({ open }) => (open ? "transparent" : colors.shadow)}
-    );
+    filter: drop-shadow(0 12px 12px ${colors.shadow});
   }
 
   &:active {
     transform: scale(1);
-    filter: none;
+    filter: drop-shadow(0 8px 8px ${colors.shadow});
   }
 `;
 
@@ -89,8 +89,9 @@ const LogoStyled = styled.div`
   display: flex;
   align-items: center;
   text-decoration: none;
-  transition: 0.08s linear;
+  transition: 0.08s ease-in-out;
   cursor: pointer;
+  filter: drop-shadow(0 8px 8px ${colors.shadow});
   will-change: filter;
 
   .image {
@@ -108,12 +109,12 @@ const LogoStyled = styled.div`
 
   &:hover {
     transform: scale(1.02);
-    filter: drop-shadow(0 8px 8px ${colors.shadow});
+    filter: drop-shadow(0 12px 12px ${colors.shadow});
   }
 
   &:active {
     transform: scale(1);
-    filter: none;
+    filter: drop-shadow(0 8px 8px ${colors.shadow});
   }
 `;
 

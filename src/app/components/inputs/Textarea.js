@@ -4,6 +4,19 @@ import styled from "styled-components";
 import { colors } from "../../../utils/colors";
 
 const InputStyled = styled.div`
+  margin-bottom: 14px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  .input_textarea {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: ${colors.primary};
+  }
+
   .textarea {
     width: 100%;
     min-height: 56px;
@@ -30,18 +43,26 @@ const InputStyled = styled.div`
   .subtitle {
     width: 100%;
     min-height: 14px;
-    margin-left: 12px;
+    padding-left: 12px;
     font-size: 12px;
     font-weight: 600;
     color: ${({ error }) => (error ? colors.fontDanger : colors.fontPrimary)};
   }
 `;
 
-export const Textarea = ({ input, meta, minRows = 5, ...props }) => {
+export const Textarea = ({
+  input,
+  meta,
+  minRows = 5,
+  title = "",
+  subtitle = "",
+  ...props
+}) => {
   const error = meta.touched && meta.error;
 
   return (
     <InputStyled error={error}>
+      {title && <h2 className="input_textarea">{title}</h2>}
       <TextareaAutosize
         {...input}
         {...props}
@@ -49,7 +70,7 @@ export const Textarea = ({ input, meta, minRows = 5, ...props }) => {
         onChange={input.onChange}
         className="textarea"
       />
-      <div className="subtitle">{meta.error}</div>
+      <div className="subtitle">{error ? meta.error : subtitle}</div>
     </InputStyled>
   );
 };

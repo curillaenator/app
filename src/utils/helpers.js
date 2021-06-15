@@ -152,15 +152,13 @@ export const openUrlWithCheck = (url) => {
 // editor handlers
 
 export const newEditorState = (html) => {
-  if (html) {
-    const contentState = ContentState.createFromBlockArray(
-      htmlToDraft(html).contentBlocks
-    );
+  if (!html) return EditorState.createEmpty();
 
-    return EditorState.createWithContent(contentState);
-  }
+  const contentState = ContentState.createFromBlockArray(
+    htmlToDraft(html).contentBlocks
+  );
 
-  return EditorState.createEmpty();
+  return EditorState.createWithContent(contentState);
 };
 
 export const convertEdStateToHtml = (edState) => {

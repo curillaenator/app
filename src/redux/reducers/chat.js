@@ -43,9 +43,6 @@ const setCurRoomMsgs = (payload) => ({ type: SET_CUR_ROOM_MSGS, payload });
 
 export const resetNewMsgsNote = (roomID) => (dispatch, getState) => {
   const userID = getState().init.user.userID;
-
-  // const onUpdate = (err) => console.log(err);
-
   db.ref(`chatrooms/${userID}/${roomID}`).update({ newMessages: 0 });
 };
 

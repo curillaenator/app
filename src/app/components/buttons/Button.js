@@ -43,7 +43,7 @@ const ButtonStyled = styled.button`
     left: 0;
     fill: ${(props) => shapeColor({ ...props, base: colors.primary })};
     filter: drop-shadow(
-      ${(props) => shapeFilter({ ...props, params: "0 10px 14px #36363631" })}
+      ${(props) => shapeFilter({ ...props, params: "0 8px 8px #36363631" })}
     );
     transition: 0.08s linear;
     z-index: -1;
@@ -52,7 +52,7 @@ const ButtonStyled = styled.button`
   &:hover .shape {
     fill: ${(props) => shapeColor({ ...props, base: colors.primaryHover })};
     filter: drop-shadow(
-      ${(props) => shapeFilter({ ...props, params: "0 12px 16px #36363631" })}
+      ${(props) => shapeFilter({ ...props, params: "0 12px 12px #36363631" })}
     );
   }
 

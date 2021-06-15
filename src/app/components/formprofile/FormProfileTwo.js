@@ -4,7 +4,7 @@ import DatePicker from "react-datepicker";
 import styled from "styled-components";
 import ru from "date-fns/locale/ru";
 
-import { TextInput } from "../inputs/Textinput";
+import { Textinput } from "../inputs/Textinput";
 import { Textarea } from "../inputs/Textarea";
 import { Checkbox } from "../inputs/Checkbox";
 import { Button } from "../buttons/Button";
@@ -21,21 +21,6 @@ import { words } from "../../../utils/worder";
 import { icons } from "../../../utils/icons";
 
 registerLocale("ru", ru);
-
-const DescriptionBlock = styled.div`
-  margin-bottom: 14px;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-
-  .block_title {
-    font-size: 14px;
-    font-weight: 700;
-    margin-bottom: 16px;
-    color: ${colors.primary};
-  }
-`;
 
 const PeriodBlock = styled.div`
   margin-bottom: 32px;
@@ -284,63 +269,44 @@ export const FormProfileTwo = ({
                 </div>
 
                 <div className="form__job_description">
-                  <DescriptionBlock>
-                    <h2 className="block_title">{words.stage2form.company}</h2>
+                  <Field
+                    name="company"
+                    title={words.stage2form.company}
+                    component={Textinput}
+                    validate={composeValidators(required, minTextLength(3))}
+                    placeholder={words.stage2form.companyPh}
+                  />
 
-                    <Field
-                      name="company"
-                      component={TextInput}
-                      validate={composeValidators(required, minTextLength(3))}
-                      placeholder={words.stage2form.companyPh}
-                    />
-                  </DescriptionBlock>
+                  <Field
+                    name="companyActivity"
+                    title={words.stage2form.companyActivity}
+                    component={Textinput}
+                    validate={composeValidators(required, minTextLength(5))}
+                    placeholder={words.stage2form.companyActivityPh}
+                  />
 
-                  <DescriptionBlock>
-                    <h2 className="block_title">
-                      {words.stage2form.companyActivity}
-                    </h2>
+                  <Field
+                    name="companySite"
+                    title={words.stage2form.companySite}
+                    component={Textinput}
+                    placeholder={words.stage2form.companySitePh}
+                  />
 
-                    <Field
-                      name="companyActivity"
-                      component={TextInput}
-                      validate={composeValidators(required, minTextLength(5))}
-                      placeholder={words.stage2form.companyActivityPh}
-                    />
-                  </DescriptionBlock>
+                  <Field
+                    name="position"
+                    title={words.stage2form.position}
+                    component={Textinput}
+                    validate={composeValidators(required, minTextLength(3))}
+                    placeholder={words.stage2form.positionPh}
+                  />
 
-                  <DescriptionBlock>
-                    <h2 className="block_title">
-                      {words.stage2form.companySite}
-                    </h2>
-
-                    <Field
-                      name="companySite"
-                      component={TextInput}
-                      placeholder={words.stage2form.companySitePh}
-                    />
-                  </DescriptionBlock>
-
-                  <DescriptionBlock>
-                    <h2 className="block_title">{words.stage2form.position}</h2>
-
-                    <Field
-                      name="position"
-                      component={TextInput}
-                      validate={composeValidators(required, minTextLength(3))}
-                      placeholder={words.stage2form.positionPh}
-                    />
-                  </DescriptionBlock>
-
-                  <DescriptionBlock>
-                    <h2 className="block_title">{words.stage2form.duty}</h2>
-
-                    <Field
-                      name="duty"
-                      component={Textarea}
-                      validate={composeValidators(required, minTextLength(12))}
-                      placeholder={words.stage2form.dutyPh}
-                    />
-                  </DescriptionBlock>
+                  <Field
+                    name="duty"
+                    title={words.stage2form.duty}
+                    component={Textarea}
+                    validate={composeValidators(required, minTextLength(12))}
+                    placeholder={words.stage2form.dutyPh}
+                  />
                 </div>
               </div>
             </div>

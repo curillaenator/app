@@ -55,7 +55,7 @@ export const SearchForm = () => {
       render={({ handleSubmit, form }) => {
         return (
           <FormStyled onSubmit={handleSubmit}>
-            <h3 className="form_title">Кого вы ищите?</h3>
+            <h3 className="form_title">Поиск пока не активен</h3>
 
             <div className="form_search">
               <Field

@@ -170,17 +170,26 @@ export const ProfileBlockOne = ({
 
             {profile.skillsHTML && (
               <div className="meta_string">
-                <h4 className="meta_string-title">IT скиллс:</h4>
+                <h4 className="meta_string-title">Навыки:</h4>
                 <div className="meta_string-data">
                   {parse(profile.skillsHTML)}
                 </div>
               </div>
             )}
 
-            <div className="meta_string">
-              <h4 className="meta_string-title">Говорю на языках:</h4>
-              <div className="meta_string-data">{profile.languages}</div>
-            </div>
+            {profile.languages && (
+              <div className="meta_string">
+                <h4 className="meta_string-title">Говорю на языках:</h4>
+                <div className="meta_string-data">{profile.languages}</div>
+              </div>
+            )}
+
+            {profile.languagesIT && (
+              <div className="meta_string">
+                <h4 className="meta_string-title">Пишу на языках:</h4>
+                <div className="meta_string-data">{profile.languagesIT}</div>
+              </div>
+            )}
           </div>
         </div>
       )}

@@ -72,11 +72,17 @@ export const words = {
     jobPh: "...Frontend разработчик, Laravel бэкенд",
     languages: (
       <span>
-        <span style={{ color: colors.fontTitle }}>Языки</span>, которыми
-        владеете:
+        <span style={{ color: colors.fontTitle }}>Языки</span>, на которых
+        говорите:
       </span>
     ),
     languagesPh: "...Английский(технический), Монгольский(свободно)...",
+    languagesIT: (
+      <span>
+        <span style={{ color: colors.fontTitle }}>Языки</span> программирования:
+      </span>
+    ),
+    languagesITPh: "...C++, Swift, Java, JavaScript...",
     skills: (
       <span>
         Ваши <span style={{ color: colors.fontTitle }}>IT скиллс</span>:
