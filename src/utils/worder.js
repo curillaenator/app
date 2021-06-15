@@ -28,6 +28,14 @@ export const words = {
       </span>
     </span>
   ),
+  starredTitleEpty: (
+    <span>
+      Ваш список{" "}
+      <span style={{ color: colors.primary }}>
+        <br /> пуст
+      </span>
+    </span>
+  ),
   searchBtn: {
     idle: "Искать специалиста",
     active: "Скрыть поиск",

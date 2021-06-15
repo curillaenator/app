@@ -29,9 +29,13 @@ export const Starred = ({
   useEffect(() => setProfile(null), [setProfile]);
   useEffect(() => getStarredList(), [getStarredList]);
 
+  const isStarredList = starredList.length > 0;
+
   return (
     <StarredPageStyled>
-      <Welcome title={words.starredTitle} />
+      <Welcome
+        title={isStarredList ? words.starredTitle : words.starredTitleEpty}
+      />
 
       {loadStarredList && <LoaderLocal />}
 
