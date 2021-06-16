@@ -122,7 +122,7 @@ export const getProfileList = () => (dispatch) => {
 
 // handleprofile
 
-export const getProfile = (profileID) => (dispatch, getState) => {
+export const getProfile = (profileID, reload) => (dispatch, getState) => {
   if (!profileID) return dispatch(setProfile(null));
 
   batch(() => {
@@ -131,16 +131,16 @@ export const getProfile = (profileID) => (dispatch, getState) => {
     dispatch(setLoadProfile(true));
   });
 
-  const profileIsLoaded = getState().main.profileList.find(
+  const loadedProfile = getState().main.profileList.find(
     (profile) => profile.profileID === profileID
   );
 
-  if (profileIsLoaded) {
-    const jobExpTotal = totalPeriodCalc(profileIsLoaded.jobExp);
+  if (loadedProfile && !reload) {
+    const jobExpTotal = totalPeriodCalc(loadedProfile.jobExp);
 
     return batch(() => {
       dispatch(setProgress(100));
-      dispatch(setProfile({ ...profileIsLoaded, jobExpTotal }));
+      dispatch(setProfile({ ...loadedProfile, jobExpTotal }));
       dispatch(setLoadProfile(false));
     });
   }
@@ -240,7 +240,7 @@ export const editProfile = (data) => async (dispatch, getState) => {
 
     batch(() => {
       dispatch(setProgress(100));
-      dispatch(getProfile(profileID));
+      dispatch(getProfile(profileID, true));
     });
   };
 
@@ -250,8 +250,6 @@ export const editProfile = (data) => async (dispatch, getState) => {
 export const removeProfile = (profileID) => (dispatch, getState) => {
   const userID = getState().init.user.userID;
   const profile = getState().main.profile;
-  // const chatRooms = getState().chat.chatRooms;
-  // const chatRoomIDs = Object.keys(chatRooms);
 
   batch(() => {
     dispatch(setProgress(0));
@@ -268,40 +266,6 @@ export const removeProfile = (profileID) => (dispatch, getState) => {
         .then(() => dispatch(setProgress(20)))
         .catch((err) => console.log(err));
     }
-
-    // if (chatRoomIDs.length > 0) {
-    //   const allMessagesOfProfileRooms = chatRoomIDs.map((roomID) => [
-    //     `chatmsgs/${roomID}`,
-    //     null,
-    //   ]);
-
-    //   const allRoomOfUser = chatRoomIDs.map((roomID) => [
-    //     `chatrooms/${userID}/${roomID}`,
-    //     null,
-    //   ]);
-
-    //   const allUserRoomsInOpponent = chatRoomIDs.map((roomID) => {
-    //     const opponentID = chatRooms[roomID].opponentID;
-    //     return [`chatrooms/${opponentID}/${roomID}`, null];
-    //   });
-
-    //   const userChatsRemove = {
-    //     ...Object.fromEntries(allMessagesOfProfileRooms),
-    //     ...Object.fromEntries(allRoomOfUser),
-    //     ...Object.fromEntries(allUserRoomsInOpponent),
-    //   };
-
-    //   await db
-    //     .ref()
-    //     .update(userChatsRemove)
-    //     .then(() => {
-    //       batch(() => {
-    //         dispatch(setProgress(40));
-    //         dispatch(resetChatState());
-    //       });
-    //     })
-    //     .catch((err) => console.log(err));
-    // }
 
     await db
       .ref(`users/${userID}`)
@@ -419,12 +383,16 @@ export const getStarredList = () => async (dispatch, getState) => {
 
   const starred = Object.keys(getState().init.user.starred || {});
 
+  // const userID = getState().init.user.userID;
+  // const starredSnap = await db.ref(`starred/${userID}`).once("value");
+  // const starred = Object.keys(starredSnap.exists() ? starredSnap.val() : {});
+
   const starredPromisesNoAva = starred.map((profileID) =>
     db.ref(`profiles/${profileID}`).once("value")
   );
 
   const starredSnaps = await Promise.all(starredPromisesNoAva)
-    .then((snaps) => snaps.map((sn) => sn.val()))
+    .then((snaps) => snaps.filter((sn) => sn.exists()).map((snp) => snp.val()))
     .catch((err) => console.log(err));
 
   if (starredSnaps.length > 0) {

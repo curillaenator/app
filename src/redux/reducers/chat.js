@@ -119,8 +119,8 @@ export const goChat = () => async (dispatch, getState) => {
     // console.log(roomID);
 
     batch(() => {
-      dispatch(setIsChat(true));
       dispatch(handleCurRoom(roomID));
+      dispatch(setIsChat(true));
     });
   }
 
@@ -131,8 +131,8 @@ export const goChat = () => async (dispatch, getState) => {
       if (err) console.log(err);
 
       batch(() => {
-        dispatch(setIsChat(true));
         dispatch(handleCurRoom(newRoomID));
+        dispatch(setIsChat(true));
       });
     };
 
