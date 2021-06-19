@@ -6,6 +6,11 @@ import htmlToDraft from "html-to-draftjs";
 
 import { colors } from "./colors";
 
+// find total msgs qty for header's red notification
+
+export const msgsQty = (allChatRooms) =>
+  Object.values(allChatRooms).reduce((a, b) => a + b.newMessages, 0);
+
 // Image loaders
 
 export const imgUploader = (file, num, userID, addPath = "") => {

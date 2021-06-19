@@ -5,10 +5,12 @@ import { RemoveScroll } from "react-remove-scroll";
 import styled from "styled-components";
 import ProgressBar from "@ramonak/react-progress-bar";
 
+// thunks
 import { signCheck, signIn, signOut } from "../redux/reducers/init";
 import { setIsChat, getChatRooms } from "../redux/reducers/chat";
 import { setMobile, setProgress, setProfileList } from "../redux/reducers/main";
 
+// components
 import { LoaderFS } from "./components/loader/LoaderFS";
 import { MainPage } from "./pages/MainPage";
 import { ProfilePage } from "./pages/ProfilePage";
@@ -16,13 +18,12 @@ import { StarredPage } from "./pages/StarredPage";
 import { Header } from "./components/header/Header";
 import { Chat } from "./components/chat/Chat";
 
+// utils
 import { colors } from "../utils/colors";
 
+// types & interfaces
 import { TypeState } from "../redux/store";
-
-interface IContainer {
-  progress: boolean;
-}
+import { IApp, IContainer } from "../types/types";
 
 const Container = styled.div<IContainer>`
   position: relative;
@@ -48,23 +49,6 @@ const Container = styled.div<IContainer>`
   @media (min-width: 1024px) {
     padding: 0 56px;
 `;
-
-interface IApp {
-  isInit: boolean;
-  user: any;
-  progress: number | null;
-  isMobile: boolean;
-  isChat: boolean;
-  chatRooms: any;
-  signCheck: () => void;
-  signIn: () => void;
-  signOut: () => void;
-  setProgress: (payload: number | null) => void;
-  setMobile: (payload: boolean) => void;
-  setProfileList: () => void;
-  setIsChat: () => void;
-  getChatRooms: () => void;
-}
 
 const ArtApp: FC<IApp> = ({
   isInit,
@@ -127,10 +111,10 @@ const ArtApp: FC<IApp> = ({
       <Header
         user={user}
         isMobile={isMobile}
+        chatRooms={chatRooms}
         signIn={signIn}
         signOut={signOut}
         setIsChat={setIsChat}
-        chatRooms={chatRooms}
         setProfileList={setProfileList}
       />
 

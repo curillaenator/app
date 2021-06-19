@@ -1,3 +1,4 @@
+import { FC } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import Popup from "reactjs-popup";
@@ -8,8 +9,11 @@ import { ButtonGhost } from "../buttons/ButtonGhost";
 import { words } from "../../../utils/worder";
 import { icons } from "../../../utils/icons";
 import { colors } from "../../../utils/colors";
+import { msgsQty } from "../../../utils/helpers";
 
 import logo from "../../../assets/images/logo.png";
+
+import { IHeader, IStyledPopup, IUserStyled } from "../../../types/types";
 
 const popup_appear = keyframes`
   from {
@@ -23,7 +27,7 @@ const popup_appear = keyframes`
   }
 `;
 
-const StyledPopup = styled(Popup)`
+const StyledPopup = styled(Popup)<IStyledPopup>`
   &-overlay {
   }
 
@@ -58,7 +62,7 @@ const StyledPopup = styled(Popup)`
   }
 `;
 
-const UserStyled = styled.div`
+const UserStyled = styled.div<IUserStyled>`
   display: flex;
   align-items: center;
   text-decoration: none;
@@ -142,7 +146,7 @@ const HeaderStyled = styled.header`
   }
 `;
 
-export const Header = ({
+export const Header: FC<IHeader> = ({
   isMobile,
   user,
   chatRooms,
@@ -153,11 +157,6 @@ export const Header = ({
 }) => {
   const history = useHistory();
   const location = useLocation();
-
-  const newMsgsQty = Object.values(chatRooms).reduce(
-    (a, b) => a + b.newMessages,
-    0
-  );
 
   return (
     <HeaderStyled>
@@ -187,16 +186,16 @@ export const Header = ({
                 <Avatar
                   imgSrc={user.avatar}
                   username={user.username}
-                  notesNum={newMsgsQty}
+                  notesNum={msgsQty(chatRooms)}
                 />
               </UserStyled>
             )}
             arrow={false}
             position="bottom right"
             closeOnDocumentClick
-            note={newMsgsQty > 0}
+            note={msgsQty(chatRooms) > 0}
           >
-            {(close) => (
+            {(close: () => void) => (
               <>
                 {location.pathname !== "/profile" && (
                   <ButtonGhost

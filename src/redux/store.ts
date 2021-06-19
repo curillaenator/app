@@ -13,4 +13,4 @@ export const store = configureStore({
 export type TypeState = ReturnType<typeof store.getState>
 export type TypeDispatch = typeof store.dispatch
 
-// window.store = store;
+(window as any).store = store;
