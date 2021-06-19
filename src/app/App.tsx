@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from "react";
+import { FC, useEffect, useCallback } from "react";
 import { connect } from "react-redux";
 import { Switch, Route } from "react-router-dom";
 import { RemoveScroll } from "react-remove-scroll";
@@ -18,7 +18,13 @@ import { Chat } from "./components/chat/Chat";
 
 import { colors } from "../utils/colors";
 
-const Container = styled.div`
+import { TypeState } from "../redux/store";
+
+interface IContainer {
+  progress: boolean;
+}
+
+const Container = styled.div<IContainer>`
   position: relative;
   min-width: 375px;
   max-width: 1440px;
@@ -43,7 +49,24 @@ const Container = styled.div`
     padding: 0 56px;
 `;
 
-const ArtApp = ({
+interface IApp {
+  isInit: boolean;
+  user: any;
+  progress: number | null;
+  isMobile: boolean;
+  isChat: boolean;
+  chatRooms: any;
+  signCheck: () => void;
+  signIn: () => void;
+  signOut: () => void;
+  setProgress: (payload: number | null) => void;
+  setMobile: (payload: boolean) => void;
+  setProfileList: () => void;
+  setIsChat: () => void;
+  getChatRooms: () => void;
+}
+
+const ArtApp: FC<IApp> = ({
   isInit,
   user,
   progress,
@@ -55,7 +78,6 @@ const ArtApp = ({
   signOut,
   setProgress,
   setMobile,
-  // setMobile1024,
   setProfileList,
   setIsChat,
   getChatRooms,
@@ -90,7 +112,7 @@ const ArtApp = ({
   if (!isInit) return <LoaderFS />;
 
   return (
-    <Container progress={progress}>
+    <Container progress={!!progress}>
       <div className="progress">
         <ProgressBar
           completed={progress || 0}
@@ -125,7 +147,7 @@ const ArtApp = ({
   );
 };
 
-const mstp = (state) => ({
+const mstp = (state: TypeState) => ({
   isInit: state.init.isInit,
   user: state.init.user,
   progress: state.main.progress,
