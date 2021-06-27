@@ -3,7 +3,13 @@
 SPA-приложение для создания своего профиля и поиска профилей других пользователей.
 Фронт - ReactJS, бек - Google Firebase
 
-[Посмотреть ITProfiler в работе](https://art-app-2020.web.app/).
+[Посмотреть ITProfiler в работе](https://art-app-2020.web.app/)
+
+Скриншоты:
+<p align="center">
+  <img src="/screens/image1.jpg">
+  <img src="/screens/image2.jpg">
+</p>
 
 ## Локальный запуск приложения
 В папке с проектом выполните команду
